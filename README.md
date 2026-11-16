@@ -14,3 +14,5 @@ Các màn hình có sẵn:
 - Khu vực quản trị (chỉ role `0`): `index.php?controller=admin&action=dashboard`
 
 Tài khoản đăng ký mới luôn có role thành viên (`1`). Để cấp quyền quản trị, cập nhật cột `role` thành `0` cho tài khoản đó trong bảng `users`. Ảnh tải lên là JPG, PNG hoặc WebP, tối đa 2 MB.
+## Material
+- **Link LaTeX Report:** [Assigment_Report](https://prism.openai.com/?u=bf57d44a-8b72-490d-ba55-219b7216ca92&pg=1&m=main.tex&d=7)
