@@ -1,5 +1,13 @@
 # LTR_WEB
 
+## Giao diện và template dùng chung
+
+- Frontend dùng Bootstrap 5.3.9. Layout chung nằm tại `Views/Layouts/Frontend/`; các view dùng chung header/footer, navbar responsive và stylesheet tại `Public/css/frontend.css`.
+- Backend dùng TailAdmin Free 2.5.1 (HTML/Tailwind CSS), không dùng TailAdmin Laravel hay PHP framework. Layout PHP chung nằm tại `Views/Layouts/Backend/`; stylesheet TailAdmin được đóng gói tại `Public/vendor/tailadmin/style.css`, kèm giấy phép MIT tại `Public/vendor/tailadmin/LICENSE`. Tương tác menu responsive dùng JavaScript thuần trong `Public/js/admin.js`.
+- Các view xác thực hiện sử dụng layout Bootstrap; dashboard quản trị sử dụng layout TailAdmin. Khi thêm trang mới, khai báo `$pageTitle` (và `$activeAdminPage` cho admin), sau đó include layout tương ứng.
+
+Nguồn TailAdmin Free: [repository](https://github.com/TailAdmin/tailadmin-free-tailwind-dashboard-template), [tài liệu](https://tailadmin.com/docs), [demo miễn phí](https://free-demo.tailadmin.com/). TailAdmin Free được phát hành theo MIT License. Bootstrap được tải qua jsDelivr CDN.
+
 ## Chạy hệ thống xác thực
 
 1. Import `web_cong_ty.sql` vào MariaDB/MySQL. Schema mặc định là `web_cong_ty`.
