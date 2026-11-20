@@ -1,28 +1,23 @@
 <?php
-$escape = static function ($value) {
-    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-};
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
+$pageTitle = 'Bảng điều khiển';
+$activeAdminPage = 'dashboard';
+require __DIR__ . '/../Layouts/Backend/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Quản trị</title>
-</head>
-<body>
-    <main>
-        <h1>Khu vực quản trị</h1>
-        <p>Xin chào, <?= $escape($_SESSION['fullname'] ?? '') ?>.</p>
-        <p>Tài khoản của bạn có quyền quản trị.</p>
-        <p><a href="index.php?controller=auth&amp;action=profile">Hồ sơ cá nhân</a></p>
-        <form method="post" action="index.php?controller=auth&amp;action=logout">
-            <input type="hidden" name="csrf_token" value="<?= $escape($_SESSION['csrf_token']) ?>">
-            <button type="submit">Đăng xuất</button>
-        </form>
-    </main>
-</body>
-</html>
+<section class="admin-dashboard-grid">
+    <article class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">Tài khoản</h2>
+        <p class="mt-2 text-lg font-semibold text-gray-800 dark:text-white">Quản trị viên</p>
+        <p class="mt-1 text-sm text-gray-500">Xin chào, <?= $escape($_SESSION['fullname'] ?? '') ?>.</p>
+    </article>
+    <article class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">Giao diện</h2>
+        <p class="mt-2 text-lg font-semibold text-gray-800 dark:text-white">TailAdmin</p>
+        <p class="mt-1 text-sm text-gray-500">Template quản trị responsive.</p>
+    </article>
+    <article class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">Website</h2>
+        <p class="mt-2 text-lg font-semibold text-gray-800 dark:text-white">LTR Company</p>
+        <p class="mt-1 text-sm text-gray-500">Khu vực quản trị nội dung website.</p>
+    </article>
+</section>
+<?php require __DIR__ . '/../Layouts/Backend/footer.php'; ?>

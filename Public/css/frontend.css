@@ -1,0 +1,19 @@
+body {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    color: #1d4ed8;
+}
+
+.auth-card {
+    max-width: 32rem;
+    margin-inline: auto;
+}
+
+.profile-avatar {
+    width: 7rem;
+    height: 7rem;
+    object-fit: cover;
+}
