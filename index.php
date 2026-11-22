@@ -51,9 +51,15 @@ if ($controller === 'admin' && $action === 'dashboard') {
     exit;
 }
 
-if (empty($_SESSION['user_id'])) {
-    header('Location: index.php?controller=auth&action=login');
+if ($controller === 'contact') {
+    require_once __DIR__ . '/Models/ContactModel.php';
+    require_once __DIR__ . '/Controllers/ContactController.php';
+    $contactController = new ContactController($db);
+    $contactController->index();
     exit;
 }
 
-header('Location: index.php?controller=auth&action=profile');
+// Trang chủ (mặc định)
+require_once __DIR__ . '/Controllers/HomeController.php';
+$homeController = new HomeController($db);
+$homeController->index();
