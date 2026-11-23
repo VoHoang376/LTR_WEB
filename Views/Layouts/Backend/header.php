@@ -20,6 +20,14 @@ $adminCsrfToken = $_SESSION['csrf_token'];
         <link rel="icon" href="Public/uploads/company/<?= $escape($settings['company_favicon']) ?>">
     <?php endif; ?>
     <link href="Public/vendor/tailadmin/style.css" rel="stylesheet">
+    <link href="Public/css/admin.css" rel="stylesheet">
+    <?php if (!empty($includeQuill)): ?>
+        <link
+            href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+            rel="stylesheet"
+            integrity="sha384-ecIckRi4QlKYya/FQUbBUjS4qp65jF/J87Guw5uzTbO1C1Jfa/6kYmd6dXUF6D7i"
+            crossorigin="anonymous">
+    <?php endif; ?>
     <link href="Public/css/admin.css?v=<?= file_exists(__DIR__ . '/../../../Public/css/admin.css') ? filemtime(__DIR__ . '/../../../Public/css/admin.css') : time() ?>" rel="stylesheet">
 </head>
 <body class="bg-gray-50 dark:bg-black">
@@ -46,6 +54,9 @@ $adminCsrfToken = $_SESSION['csrf_token'];
                     </li>
                     <li>
                         <a
+                            class="menu-item group <?= $activeAdminPage === 'about' ? 'menu-item-active' : 'menu-item-inactive' ?>"
+                            href="index.php?controller=adminAbout&amp;action=index">
+                            <span class="menu-item-text">Giới thiệu</span>
                             class="menu-item group <?= $activeAdminPage === 'contacts' ? 'menu-item-active' : 'menu-item-inactive' ?>"
                             href="index.php?controller=admin&amp;action=contacts"
                             <?= $activeAdminPage === 'contacts' ? 'aria-current="page"' : '' ?>>
@@ -54,6 +65,9 @@ $adminCsrfToken = $_SESSION['csrf_token'];
                     </li>
                     <li>
                         <a
+                            class="menu-item group <?= $activeAdminPage === 'faq' ? 'menu-item-active' : 'menu-item-inactive' ?>"
+                            href="index.php?controller=adminFaq&amp;action=index">
+                            <span class="menu-item-text">Câu hỏi thường gặp</span>
                             class="menu-item group <?= $activeAdminPage === 'settings' ? 'menu-item-active' : 'menu-item-inactive' ?>"
                             href="index.php?controller=admin&amp;action=settings"
                             <?= $activeAdminPage === 'settings' ? 'aria-current="page"' : '' ?>>

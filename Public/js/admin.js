@@ -24,6 +24,12 @@ document.addEventListener('DOMContentLoaded', function () {
             setSidebarOpen(false);
         }
     });
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        if (form.matches('[data-confirm]') && !window.confirm(form.getAttribute('data-confirm'))) {
+            event.preventDefault();
+        }
+    });
     window.addEventListener('resize', function () {
         if (window.innerWidth >= 1280) {
             setSidebarOpen(false);

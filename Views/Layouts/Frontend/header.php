@@ -24,6 +24,8 @@ $settings = isset($settings) ? $settings : [];
         rel="stylesheet"
         integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX"
         crossorigin="anonymous">
+    <link href="Public/css/frontend.css" rel="stylesheet">
+    <link href="Public/css/content.css" rel="stylesheet">
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -53,6 +55,9 @@ $settings = isset($settings) ? $settings : [];
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNavigation">
+                <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <a class="nav-link" href="index.php?controller=about&amp;action=index">Giới thiệu</a>
+                    <a class="nav-link" href="index.php?controller=faq&amp;action=index">Hỏi/Đáp</a>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link<?= $currentPage === 'home' ? ' active fw-semibold' : '' ?>" href="index.php">Trang chủ</a>

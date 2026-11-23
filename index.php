@@ -10,9 +10,52 @@ session_start();
 require_once __DIR__ . '/Config/database.php';
 require_once __DIR__ . '/Models/UserModel.php';
 require_once __DIR__ . '/Controllers/AuthController.php';
+require_once __DIR__ . '/Controllers/AboutController.php';
+require_once __DIR__ . '/Controllers/FaqController.php';
 
 $controller = $_GET['controller'] ?? '';
 $action = $_GET['action'] ?? '';
+
+if ($controller === 'about' && ($action === '' || $action === 'index')) {
+    (new AboutController($db))->publicIndex();
+    exit;
+}
+
+if ($controller === 'faq' && ($action === '' || $action === 'index')) {
+    (new FaqController($db))->publicIndex();
+    exit;
+}
+
+$contentAdminRoutes = [
+    'adminAbout' => [
+        'index' => 'adminIndex',
+        'create' => 'create',
+        'store' => 'store',
+        'edit' => 'edit',
+        'update' => 'update',
+        'delete' => 'delete',
+    ],
+    'adminFaq' => [
+        'index' => 'adminIndex',
+        'create' => 'create',
+        'store' => 'store',
+        'edit' => 'edit',
+        'update' => 'update',
+        'delete' => 'delete',
+    ],
+];
+
+if (isset($contentAdminRoutes[$controller])) {
+    if (!isset($contentAdminRoutes[$controller][$action])) {
+        http_response_code(404);
+        exit('Không tìm thấy chức năng quản trị.');
+    }
+
+    $controllerClass = $controller === 'adminAbout' ? 'AboutController' : 'FaqController';
+    $contentController = new $controllerClass($db);
+    $contentController->{$contentAdminRoutes[$controller][$action]}();
+    exit;
+}
 
 if ($controller === 'auth') {
     $authController = new AuthController($db);

@@ -7,6 +7,15 @@ USE `web_cong_ty`;
 SET NAMES utf8mb4;
 SET time_zone = '+00:00';
 
+
+CREATE DATABASE IF NOT EXISTS `web_cong_ty`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+USE `web_cong_ty`;
+
+SET NAMES utf8mb4;
+SET time_zone = '+00:00';
+
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(191) NOT NULL,
@@ -208,6 +217,14 @@ ALTER TABLE `contacts`
 
 ALTER TABLE `faqs`
   ADD INDEX IF NOT EXISTS `idx_faqs_sort_order` (`status`, `sort_order`, `id`);
+
+ALTER TABLE `products`
+  ADD INDEX IF NOT EXISTS `idx_products_catalog` (`status`, `category_id`, `created_at`);
+
+ALTER TABLE `orders`
+  ADD INDEX IF NOT EXISTS `idx_orders_status_created` (`status`, `created_at`);
+
+ALTER TABLE `posts`
 
 ALTER TABLE `products`
   ADD INDEX IF NOT EXISTS `idx_products_catalog` (`status`, `category_id`, `created_at`);

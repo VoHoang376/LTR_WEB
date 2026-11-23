@@ -21,6 +21,10 @@
     justify-content: space-between;
 }
 
+.about-editor .ql-editor {
+    min-height: 16rem;
+}
+
 .admin-dashboard-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
