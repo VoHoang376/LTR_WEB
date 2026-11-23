@@ -16,6 +16,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'LTR Company';
         integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX"
         crossorigin="anonymous">
     <link href="Public/css/frontend.css" rel="stylesheet">
+    <link href="Public/css/content.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-white border-bottom">
@@ -33,6 +34,8 @@ $pageTitle = isset($pageTitle) ? $pageTitle : 'LTR Company';
             </button>
             <div class="collapse navbar-collapse" id="mainNavigation">
                 <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <a class="nav-link" href="index.php?controller=about&amp;action=index">Giới thiệu</a>
+                    <a class="nav-link" href="index.php?controller=faq&amp;action=index">Hỏi/Đáp</a>
                     <?php if (!empty($_SESSION['user_id'])): ?>
                         <a class="nav-link" href="index.php?controller=auth&amp;action=profile">Hồ sơ cá nhân</a>
                     <?php else: ?>

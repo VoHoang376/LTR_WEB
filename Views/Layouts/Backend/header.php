@@ -17,6 +17,13 @@ $adminCsrfToken = $_SESSION['csrf_token'];
     <title><?= $escape($pageTitle) ?> | Quản trị LTR</title>
     <link href="Public/vendor/tailadmin/style.css" rel="stylesheet">
     <link href="Public/css/admin.css" rel="stylesheet">
+    <?php if (!empty($includeQuill)): ?>
+        <link
+            href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+            rel="stylesheet"
+            integrity="sha384-ecIckRi4QlKYya/FQUbBUjS4qp65jF/J87Guw5uzTbO1C1Jfa/6kYmd6dXUF6D7i"
+            crossorigin="anonymous">
+    <?php endif; ?>
 </head>
 <body class="bg-gray-50 dark:bg-black">
     <div class="min-h-screen xl:flex">
@@ -38,6 +45,20 @@ $adminCsrfToken = $_SESSION['csrf_token'];
                             href="index.php?controller=admin&amp;action=dashboard"
                             <?= $activeAdminPage === 'dashboard' ? 'aria-current="page"' : '' ?>>
                             <span class="menu-item-text">Bảng điều khiển</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="menu-item group <?= $activeAdminPage === 'about' ? 'menu-item-active' : 'menu-item-inactive' ?>"
+                            href="index.php?controller=adminAbout&amp;action=index">
+                            <span class="menu-item-text">Giới thiệu</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="menu-item group <?= $activeAdminPage === 'faq' ? 'menu-item-active' : 'menu-item-inactive' ?>"
+                            href="index.php?controller=adminFaq&amp;action=index">
+                            <span class="menu-item-text">Câu hỏi thường gặp</span>
                         </a>
                     </li>
                     <li>
