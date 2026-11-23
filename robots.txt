@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /index.php?controller=admin
+Disallow: /Config/
+Disallow: /Models/
+Disallow: /Controllers/
+Disallow: /Views/
+Allow: /Public/
+Allow: /index.php
+
+Sitemap: http://localhost/LTR_WEB/sitemap.xml

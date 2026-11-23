@@ -4,6 +4,7 @@ $escape = static function ($value) {
 };
 $pageTitle = isset($pageTitle) ? $pageTitle : 'Quản trị';
 $activeAdminPage = isset($activeAdminPage) ? $activeAdminPage : 'dashboard';
+$settings = isset($settings) ? $settings : [];
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
@@ -15,8 +16,11 @@ $adminCsrfToken = $_SESSION['csrf_token'];
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $escape($pageTitle) ?> | Quản trị LTR</title>
+    <?php if (!empty($settings['company_favicon'])): ?>
+        <link rel="icon" href="Public/uploads/company/<?= $escape($settings['company_favicon']) ?>">
+    <?php endif; ?>
     <link href="Public/vendor/tailadmin/style.css" rel="stylesheet">
-    <link href="Public/css/admin.css" rel="stylesheet">
+    <link href="Public/css/admin.css?v=<?= file_exists(__DIR__ . '/../../../Public/css/admin.css') ? filemtime(__DIR__ . '/../../../Public/css/admin.css') : time() ?>" rel="stylesheet">
 </head>
 <body class="bg-gray-50 dark:bg-black">
     <div class="min-h-screen xl:flex">
@@ -30,7 +34,7 @@ $adminCsrfToken = $_SESSION['csrf_token'];
                 </a>
             </div>
             <nav aria-label="Menu quản trị">
-                <h2 class="mb-4 text-xs leading-5 text-gray-400 uppercase">Menu</h2>
+                <h2 class="mb-4 text-xs leading-5 text-gray-400 uppercase">Menu Quản trị</h2>
                 <ul class="mb-6 flex flex-col gap-1">
                     <li>
                         <a
@@ -42,9 +46,45 @@ $adminCsrfToken = $_SESSION['csrf_token'];
                     </li>
                     <li>
                         <a
+                            class="menu-item group <?= $activeAdminPage === 'contacts' ? 'menu-item-active' : 'menu-item-inactive' ?>"
+                            href="index.php?controller=admin&amp;action=contacts"
+                            <?= $activeAdminPage === 'contacts' ? 'aria-current="page"' : '' ?>>
+                            <span class="menu-item-text">Quản lý liên hệ</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="menu-item group <?= $activeAdminPage === 'settings' ? 'menu-item-active' : 'menu-item-inactive' ?>"
+                            href="index.php?controller=admin&amp;action=settings"
+                            <?= $activeAdminPage === 'settings' ? 'aria-current="page"' : '' ?>>
+                            <span class="menu-item-text">Cấu hình website</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="menu-item group <?= $activeAdminPage === 'pricing' ? 'menu-item-active' : 'menu-item-inactive' ?>"
+                            href="index.php?controller=admin&amp;action=pricing"
+                            <?= $activeAdminPage === 'pricing' ? 'aria-current="page"' : '' ?>>
+                            <span class="menu-item-text">Quản lý bảng giá</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <h2 class="mb-4 text-xs leading-5 text-gray-400 uppercase">Cá nhân &amp; Hệ thống</h2>
+                <ul class="mb-6 flex flex-col gap-1">
+                    <li>
+                        <a
                             class="menu-item group menu-item-inactive"
                             href="index.php?controller=auth&amp;action=profile">
                             <span class="menu-item-text">Hồ sơ cá nhân</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="menu-item group menu-item-inactive"
+                            href="index.php"
+                            target="_blank">
+                            <span class="menu-item-text">Xem trang ngoài &nearr;</span>
                         </a>
                     </li>
                 </ul>
@@ -79,7 +119,7 @@ $adminCsrfToken = $_SESSION['csrf_token'];
                         </span>
                         <form method="post" action="index.php?controller=auth&amp;action=logout">
                             <input type="hidden" name="csrf_token" value="<?= $escape($adminCsrfToken) ?>">
-                            <button class="text-sm font-medium text-brand-500" type="submit">Đăng xuất</button>
+                            <button class="text-sm font-medium text-brand-500 hover:underline" type="submit">Đăng xuất</button>
                         </form>
                     </div>
                 </div>
