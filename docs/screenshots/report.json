@@ -1,0 +1,14 @@
+[
+  {
+    "name": "frontend-product-list",
+    "url": "?controller=product&action=index",
+    "bytes": 456662,
+    "title": "Danh sách sản phẩm | LTR Technology"
+  },
+  {
+    "name": "frontend-product-list-mobile",
+    "url": "?controller=product&action=index",
+    "bytes": 274221,
+    "title": "Danh sách sản phẩm | LTR Technology"
+  }
+]

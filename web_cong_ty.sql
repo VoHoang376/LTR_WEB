@@ -75,10 +75,13 @@ CREATE TABLE `faqs` (
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `receiver_name` varchar(100) NOT NULL DEFAULT '',
   `total_amount` decimal(15,2) NOT NULL,
   `shipping_address` varchar(255) NOT NULL,
   `receiver_phone` varchar(20) NOT NULL,
-  `status` tinyint(4) DEFAULT 0 COMMENT '0: Pending, 1: Shipping, 2: Completed, 3: Cancelled',
+  `payment_method` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0: COD, 1: Chuyển khoản',
+  `note` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0: Chờ xác nhận, 1: Đã xác nhận, 2: Đang giao, 3: Hoàn tất, 4: Đã hủy',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -91,8 +94,9 @@ CREATE TABLE `orders` (
 CREATE TABLE `order_details` (
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
+  `product_name` varchar(255) NOT NULL DEFAULT '',
   `quantity` int(11) NOT NULL,
-  `price` decimal(15,2) NOT NULL
+  `price` decimal(15,2) NOT NULL COMMENT 'Đơn giá tại thời điểm mua'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -124,11 +128,25 @@ CREATE TABLE `products` (
   `name` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
   `price` decimal(15,2) NOT NULL,
+  `stock` int(11) NOT NULL DEFAULT 0 COMMENT 'Số lượng tồn kho',
   `thumbnail` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `specifications` text DEFAULT NULL,
-  `status` tinyint(4) DEFAULT 1 COMMENT '0: Sold out, 1: In stock',
+  `status` tinyint(4) DEFAULT 1 COMMENT '0: Ngừng kinh doanh, 1: Đang bán',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `product_images`
+--
+
+CREATE TABLE `product_images` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -208,7 +226,9 @@ ALTER TABLE `faqs`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `idx_orders_status` (`status`),
+  ADD KEY `idx_orders_created_at` (`created_at`);
 
 --
 -- Chỉ mục cho bảng `order_details`
@@ -230,7 +250,16 @@ ALTER TABLE `posts`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `category_id` (`category_id`);
+  ADD KEY `category_id` (`category_id`),
+  ADD KEY `idx_products_status` (`status`),
+  ADD KEY `idx_products_price` (`price`);
+
+--
+-- Chỉ mục cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Chỉ mục cho bảng `reviews`
@@ -295,6 +324,12 @@ ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT cho bảng `reviews`
 --
 ALTER TABLE `reviews`
@@ -346,6 +381,12 @@ ALTER TABLE `posts`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  ADD CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `reviews`
