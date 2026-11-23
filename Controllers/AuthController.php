@@ -80,7 +80,13 @@ class AuthController
                     $_SESSION['role'] = (int) $user['role'];
                     $_SESSION['fullname'] = $user['fullname'];
 
-                    if ((int) $user['role'] === 0) {
+                    // Quay lại trang người dùng định vào trước khi bị yêu cầu đăng nhập
+                    // (ví dụ trang thanh toán). Chỉ chấp nhận URL nội bộ để tránh open redirect.
+                    $redirectTo = $this->takeRedirectTarget();
+
+                    if ($redirectTo !== null) {
+                        header('Location: ' . $redirectTo);
+                    } elseif ((int) $user['role'] === 0) {
                         header('Location: index.php?controller=admin&action=dashboard');
                     } else {
                         header('Location: index.php');
@@ -199,6 +205,25 @@ class AuthController
     private function passwordHash($id)
     {
         return $this->userModel->findPasswordById($id);
+    }
+
+    /**
+     * Lấy URL nội bộ cần quay lại sau khi đăng nhập (do Permission::requireLogin đặt vào session).
+     * Chỉ chấp nhận chuỗi bắt đầu bằng "index.php" và không chứa scheme/host.
+     */
+    private function takeRedirectTarget()
+    {
+        $target = $_SESSION['redirect_after_login'] ?? null;
+        unset($_SESSION['redirect_after_login']);
+
+        if (!is_string($target) || $target === '') {
+            return null;
+        }
+        if (preg_match('/^index\.php(\?[A-Za-z0-9_\-\.%&=]*)?$/', $target) !== 1) {
+            return null;
+        }
+
+        return $target;
     }
 
     private function requireLogin()

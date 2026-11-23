@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#dcfce7"/><stop offset="1" stop-color="#bbf7d0"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#475569"/><stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <radialGradient id="lens" cx="0.35" cy="0.35" r="0.8">
+      <stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#0f172a"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="130" cy="140" r="95" fill="#ffffff" opacity="0.4"/>
+  <circle cx="690" cy="480" r="115" fill="#ffffff" opacity="0.3"/>
+  <ellipse cx="400" cy="470" rx="200" ry="22" fill="#0f172a" opacity="0.12"/>
+  <rect x="240" y="170" width="320" height="70" rx="18" fill="url(#body)"/>
+  <rect x="270" y="200" width="90" height="10" rx="5" fill="#94a3b8"/>
+  <circle cx="510" cy="205" r="9" fill="#22c55e"/>
+  <path d="M400 240c110 0 190 78 190 150H210c0-72 80-150 190-150z" fill="url(#body)"/>
+  <circle cx="400" cy="330" r="78" fill="#0f172a"/>
+  <circle cx="400" cy="330" r="60" fill="url(#lens)"/>
+  <circle cx="400" cy="330" r="26" fill="#020617"/>
+  <circle cx="378" cy="308" r="12" fill="#ffffff" opacity="0.6"/>
+  <rect x="360" y="390" width="80" height="14" rx="7" fill="#334155"/>
+</svg>

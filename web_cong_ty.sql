@@ -93,9 +93,14 @@ CREATE TABLE IF NOT EXISTS `products` (
 CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
+  `receiver_name` varchar(100) NOT NULL DEFAULT '',
   `total_amount` decimal(15,2) NOT NULL,
   `shipping_address` varchar(255) NOT NULL,
   `receiver_phone` varchar(20) NOT NULL,
+  `payment_method` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0: COD, 1: Chuyển khoản',
+  `note` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0: Chờ xác nhận, 1: Đã xác nhận, 2: Đang giao, 3: Hoàn tất, 4: Đã hủy',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
   `status` tinyint(4) DEFAULT 0 COMMENT '0: Pending, 1: Shipping, 2: Completed, 3: Cancelled',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
@@ -107,7 +112,9 @@ CREATE TABLE IF NOT EXISTS `orders` (
 CREATE TABLE IF NOT EXISTS `order_details` (
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
+  `product_name` varchar(255) NOT NULL DEFAULT '',
   `quantity` int(11) NOT NULL,
+  `price` decimal(15,2) NOT NULL COMMENT 'Đơn giá tại thời điểm mua'
   `price` decimal(15,2) NOT NULL,
   PRIMARY KEY (`order_id`, `product_id`),
   KEY `idx_product_id` (`product_id`),
@@ -126,6 +133,50 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `meta_keywords` varchar(255) DEFAULT NULL,
   `meta_description` varchar(320) DEFAULT NULL,
   `status` tinyint(4) DEFAULT 1 COMMENT '0: Draft, 1: Published',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `price` decimal(15,2) NOT NULL,
+  `stock` int(11) NOT NULL DEFAULT 0 COMMENT 'Số lượng tồn kho',
+  `thumbnail` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `specifications` text DEFAULT NULL,
+  `status` tinyint(4) DEFAULT 1 COMMENT '0: Ngừng kinh doanh, 1: Đang bán',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `product_images`
+--
+
+CREATE TABLE `product_images` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
@@ -201,10 +252,40 @@ ALTER TABLE `contacts`
   ADD COLUMN IF NOT EXISTS `is_read` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: Unread, 1: Read' AFTER `status`;
 
 ALTER TABLE `faqs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `created_by` (`created_by`);
+
+--
+-- Chỉ mục cho bảng `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `idx_orders_status` (`status`),
+  ADD KEY `idx_orders_created_at` (`created_at`);
+
+--
+-- Chỉ mục cho bảng `order_details`
+--
+ALTER TABLE `order_details`
+  ADD PRIMARY KEY (`order_id`,`product_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `idx_product_id` (`product_id`);
   ADD COLUMN IF NOT EXISTS `sort_order` int(11) NOT NULL DEFAULT 0 AFTER `answer`,
   ADD COLUMN IF NOT EXISTS `created_at` timestamp NOT NULL DEFAULT current_timestamp() AFTER `status`;
 
 ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`),
+  ADD KEY `idx_products_status` (`status`),
+  ADD KEY `idx_products_price` (`price`);
+
+--
+-- Chỉ mục cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
   ADD COLUMN IF NOT EXISTS `stock` int(10) unsigned NOT NULL DEFAULT 0 AFTER `price`;
 
 ALTER TABLE `posts`
@@ -227,6 +308,41 @@ ALTER TABLE `orders`
 ALTER TABLE `posts`
 
 ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Các ràng buộc cho các bảng đã đổ
+--
+
+--
+-- Các ràng buộc cho bảng `contacts`
+--
+ALTER TABLE `contacts`
+  ADD CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`handled_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `faqs`
+--
+ALTER TABLE `faqs`
+  ADD CONSTRAINT `faqs_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
   ADD INDEX IF NOT EXISTS `idx_products_catalog` (`status`, `category_id`, `created_at`);
 
 ALTER TABLE `orders`
@@ -240,6 +356,12 @@ ALTER TABLE `posts`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  ADD CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `reviews`
