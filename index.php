@@ -72,31 +72,41 @@ if ($controller === 'auth') {
     }
 }
 
-if ($controller === 'admin' && $action === 'dashboard') {
-    if (empty($_SESSION['user_id'])) {
-        header('Location: index.php?controller=auth&action=login');
-        exit;
-    }
-    $userModel = new UserModel($db);
-    $currentUser = $userModel->findById($_SESSION['user_id']);
-    if (!$currentUser || (int) $currentUser['status'] !== 1) {
-        $_SESSION = [];
-        session_destroy();
-        header('Location: index.php?controller=auth&action=login');
-        exit;
-    }
-    if ((int) $currentUser['role'] !== 0) {
-        http_response_code(403);
-        exit('Bạn không có quyền truy cập trang quản trị.');
-    }
+if ($controller === 'admin') {
+    require_once __DIR__ . '/Controllers/AdminController.php';
+    $adminController = new AdminController($db);
+    $actions = [
+        'dashboard' => 'dashboard',
+        'contacts' => 'contacts',
+        'contact_status' => 'updateContactStatus',
+        'contact_delete' => 'deleteContact',
+        'settings' => 'settings',
+        'pricing' => 'pricing',
+        'pricing_save' => 'savePricing',
+        'pricing_delete' => 'deletePricing',
+    ];
 
-    require __DIR__ . '/Views/Backends/dashboard.php';
+    $actionName = $actions[$action] ?? 'dashboard';
+    $adminController->{$actionName}();
     exit;
 }
 
-if (empty($_SESSION['user_id'])) {
-    header('Location: index.php?controller=auth&action=login');
+if ($controller === 'pricing') {
+    require_once __DIR__ . '/Controllers/PricingController.php';
+    $pricingController = new PricingController($db);
+    $pricingController->index();
     exit;
 }
 
-header('Location: index.php?controller=auth&action=profile');
+if ($controller === 'contact') {
+    require_once __DIR__ . '/Models/ContactModel.php';
+    require_once __DIR__ . '/Controllers/ContactController.php';
+    $contactController = new ContactController($db);
+    $contactController->index();
+    exit;
+}
+
+// Trang chủ (mặc định)
+require_once __DIR__ . '/Controllers/HomeController.php';
+$homeController = new HomeController($db);
+$homeController->index();
