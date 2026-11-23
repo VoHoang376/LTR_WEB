@@ -115,6 +115,71 @@ a {
     color: #fff;
     font-size: 0.72rem;
     font-weight: 700;
+/* ===== General ===== */
+body {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    color: #1d4ed8;
+}
+
+.navbar .nav-link.active {
+    color: #1d4ed8;
+}
+
+.auth-card {
+    max-width: 32rem;
+    margin-inline: auto;
+}
+
+.profile-avatar {
+    width: 7rem;
+    height: 7rem;
+    object-fit: cover;
+}
+
+/* ===== Hero Section ===== */
+.hero-slide {
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+}
+
+.hero-slide-1 {
+    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #1e40af 100%);
+}
+
+.hero-slide-2 {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #0d9488 100%);
+}
+
+.hero-slide-3 {
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #6d28d9 100%);
+}
+
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== Features ===== */
+.feature-card {
+    border-radius: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #dbeafe, #eff6ff);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -808,5 +873,116 @@ a {
 
     .stock-badge {
         font-size: 0.68rem;
+.feature-icon i {
+    font-size: 1.75rem;
+    color: #1d4ed8;
+}
+
+/* ===== Product Cards ===== */
+.product-card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.product-img-placeholder {
+    height: 200px;
+}
+
+.placeholder-1 { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+.placeholder-2 { background: linear-gradient(135deg, #059669, #34d399); }
+.placeholder-3 { background: linear-gradient(135deg, #d97706, #fbbf24); }
+.placeholder-4 { background: linear-gradient(135deg, #dc2626, #f87171); }
+
+/* ===== News Cards ===== */
+.news-card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.news-img-placeholder {
+    height: 180px;
+}
+
+.news-placeholder-1 { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
+.news-placeholder-2 { background: linear-gradient(135deg, #064e3b, #059669); }
+.news-placeholder-3 { background: linear-gradient(135deg, #581c87, #7c3aed); }
+
+/* ===== CTA Section ===== */
+.cta-section {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 50%, #1e3a8a 100%);
+}
+
+/* ===== Contact Page ===== */
+.contact-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #dbeafe, #eff6ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1d4ed8;
+    font-size: 1.1rem;
+}
+
+/* ===== Footer ===== */
+.footer-section {
+    background-color: #1e293b;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #ffffff;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 991.98px) {
+    .hero-slide {
+        min-height: 400px;
+        padding: 3rem 0;
+    }
+
+    .hero-slide h1,
+    .hero-slide h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .hero-slide {
+        min-height: 350px;
+        padding: 2.5rem 0;
+    }
+
+    .hero-slide h1,
+    .hero-slide h2 {
+        font-size: 1.5rem;
+    }
+
+    .product-img-placeholder,
+    .news-img-placeholder {
+        height: 150px;
     }
 }
