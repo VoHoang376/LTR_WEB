@@ -14,8 +14,8 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-8">
-                                <h1 class="display-4 fw-bold text-white mb-3">Giải Pháp Công Nghệ Toàn Diện</h1>
-                                <p class="lead text-white-75 mb-4">Chúng tôi cung cấp các giải pháp công nghệ hàng đầu, giúp doanh nghiệp của bạn vận hành hiệu quả và phát triển bền vững.</p>
+                                <h1 class="display-4 fw-bold text-white mb-3"><?= $escape($settings['company_slogan'] ?? 'Giải Pháp Công Nghệ Toàn Diện') ?></h1>
+                                <p class="lead text-white-75 mb-4"><?= $escape($settings['company_intro'] ?? 'Chúng tôi cung cấp các giải pháp công nghệ hàng đầu, giúp doanh nghiệp của bạn vận hành hiệu quả và phát triển bền vững.') ?></p>
                                 <a href="index.php?controller=contact" class="btn btn-light btn-lg me-2">
                                     <i class="bi bi-telephone me-1"></i> Liên hệ ngay
                                 </a>

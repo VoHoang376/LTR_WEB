@@ -23,7 +23,7 @@
                             </div>
                             <div>
                                 <h6 class="fw-semibold mb-1">Địa chỉ</h6>
-                                <p class="text-secondary mb-0">268 Lý Thường Kiệt, Phường 14, Quận 10, TP. Hồ Chí Minh</p>
+                                <p class="text-secondary mb-0"><?= $escape($settings['company_address'] ?? '268 Lý Thường Kiệt, Phường 14, Quận 10, TP. Hồ Chí Minh') ?></p>
                             </div>
                         </div>
                         <div class="d-flex mb-3">
@@ -32,7 +32,7 @@
                             </div>
                             <div>
                                 <h6 class="fw-semibold mb-1">Điện thoại</h6>
-                                <p class="text-secondary mb-0">(028) 3864 7256</p>
+                                <p class="text-secondary mb-0"><?= $escape($settings['company_phone'] ?? '(028) 3864 7256') ?></p>
                             </div>
                         </div>
                         <div class="d-flex mb-3">
@@ -41,7 +41,7 @@
                             </div>
                             <div>
                                 <h6 class="fw-semibold mb-1">Email</h6>
-                                <p class="text-secondary mb-0">contact@ltrcompany.vn</p>
+                                <p class="text-secondary mb-0"><?= $escape($settings['company_email'] ?? 'contact@ltrcompany.vn') ?></p>
                             </div>
                         </div>
                         <div class="d-flex">
@@ -50,7 +50,7 @@
                             </div>
                             <div>
                                 <h6 class="fw-semibold mb-1">Giờ làm việc</h6>
-                                <p class="text-secondary mb-0">Thứ 2 – Thứ 6: 8:00 – 17:30<br>Thứ 7: 8:00 – 12:00</p>
+                                <p class="text-secondary mb-0"><?= nl2br($escape($settings['company_hours'] ?? "Thứ 2 – Thứ 6: 8:00 – 17:30\nThứ 7: 8:00 – 12:00")) ?></p>
                             </div>
                         </div>
                     </div>

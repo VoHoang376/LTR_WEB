@@ -3,15 +3,19 @@
 class ContactController
 {
     private $contactModel;
+    private $settingModel;
 
     public function __construct(PDO $db)
     {
         require_once __DIR__ . '/../Models/ContactModel.php';
+        require_once __DIR__ . '/../Models/SettingModel.php';
         $this->contactModel = new ContactModel($db);
+        $this->settingModel = new SettingModel($db);
     }
 
     public function index()
     {
+        $settings = $this->settingModel->getAll();
         $error = null;
         $success = null;
         $old = [

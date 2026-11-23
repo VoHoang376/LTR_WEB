@@ -4,14 +4,21 @@ $escape = static function ($value) {
 };
 $pageTitle = isset($pageTitle) ? $pageTitle : 'LTR Company';
 $currentPage = isset($currentPage) ? $currentPage : '';
+$settings = isset($settings) ? $settings : [];
 ?>
 <!doctype html>
 <html lang="vi">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="LTR Company – Giải pháp công nghệ toàn diện cho doanh nghiệp. Sản phẩm chất lượng cao, dịch vụ chuyên nghiệp.">
-    <title><?= $escape($pageTitle) ?> | LTR Company</title>
+    <meta name="description" content="<?= $escape($settings['company_slogan'] ?? 'LTR Company – Giải pháp công nghệ toàn diện cho doanh nghiệp. Sản phẩm chất lượng cao, dịch vụ chuyên nghiệp.') ?>">
+    <meta property="og:title" content="<?= $escape($pageTitle) ?> | <?= $escape($settings['company_name'] ?? 'LTR Company') ?>">
+    <meta property="og:description" content="<?= $escape($settings['company_slogan'] ?? 'Giải pháp công nghệ toàn diện cho doanh nghiệp.') ?>">
+    <meta property="og:type" content="website">
+    <title><?= $escape($pageTitle) ?> | <?= $escape($settings['company_name'] ?? 'LTR Company') ?></title>
+    <?php if (!empty($settings['company_favicon'])): ?>
+        <link rel="icon" href="Public/uploads/company/<?= $escape($settings['company_favicon']) ?>">
+    <?php endif; ?>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -25,8 +32,15 @@ $currentPage = isset($currentPage) ? $currentPage : '';
 <body>
     <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.php">
-                <i class="bi bi-building me-1 text-primary"></i>LTR Company
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.php">
+                <?php if (!empty($settings['company_logo'])): ?>
+                    <img src="Public/uploads/company/<?= $escape($settings['company_logo']) ?>"
+                         alt="Logo <?= $escape($settings['company_name'] ?? 'LTR Company') ?>"
+                         style="height: 32px; width: auto; object-fit: contain;">
+                <?php else: ?>
+                    <i class="bi bi-building text-primary"></i>
+                <?php endif; ?>
+                <span><?= $escape($settings['company_name'] ?? 'LTR Company') ?></span>
             </a>
             <button
                 class="navbar-toggler"
@@ -48,6 +62,9 @@ $currentPage = isset($currentPage) ? $currentPage : '';
                     </li>
                     <li class="nav-item">
                         <a class="nav-link<?= $currentPage === 'product' ? ' active fw-semibold' : '' ?>" href="index.php?controller=product">Sản phẩm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link<?= $currentPage === 'pricing' ? ' active fw-semibold' : '' ?>" href="index.php?controller=pricing">Bảng giá</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link<?= $currentPage === 'post' ? ' active fw-semibold' : '' ?>" href="index.php?controller=post">Tin tức</a>

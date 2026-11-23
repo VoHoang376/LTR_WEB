@@ -3,8 +3,8 @@
         <div class="container">
             <div class="row g-4 mb-4">
                 <div class="col-lg-4">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-building me-1"></i>LTR Company</h5>
-                    <p class="text-white-50">Chuyên cung cấp các giải pháp công nghệ toàn diện cho doanh nghiệp. Chất lượng hàng đầu, dịch vụ tận tâm.</p>
+                    <h5 class="fw-bold mb-3"><i class="bi bi-building me-1"></i><?= $escape($settings['company_name'] ?? 'LTR Company') ?></h5>
+                    <p class="text-white-50"><?= $escape($settings['company_intro'] ?? 'Chuyên cung cấp các giải pháp công nghệ toàn diện cho doanh nghiệp. Chất lượng hàng đầu, dịch vụ tận tâm.') ?></p>
                 </div>
                 <div class="col-sm-6 col-lg-2">
                     <h6 class="fw-semibold mb-3">Liên kết</h6>
@@ -26,15 +26,15 @@
                 <div class="col-lg-3">
                     <h6 class="fw-semibold mb-3">Liên hệ</h6>
                     <ul class="list-unstyled text-white-50">
-                        <li class="mb-2"><i class="bi bi-geo-alt me-2"></i>268 Lý Thường Kiệt, Q.10, TP.HCM</li>
-                        <li class="mb-2"><i class="bi bi-telephone me-2"></i>(028) 3864 7256</li>
-                        <li class="mb-2"><i class="bi bi-envelope me-2"></i>contact@ltrcompany.vn</li>
+                        <li class="mb-2"><i class="bi bi-geo-alt me-2"></i><?= $escape($settings['company_address'] ?? '268 Lý Thường Kiệt, Q.10, TP.HCM') ?></li>
+                        <li class="mb-2"><i class="bi bi-telephone me-2"></i><?= $escape($settings['company_phone'] ?? '(028) 3864 7256') ?></li>
+                        <li class="mb-2"><i class="bi bi-envelope me-2"></i><?= $escape($settings['company_email'] ?? 'contact@ltrcompany.vn') ?></li>
                     </ul>
                 </div>
             </div>
             <hr class="border-secondary">
             <div class="text-center text-white-50 small">
-                &copy; <?= date('Y') ?> LTR Company. All rights reserved.
+                &copy; <?= date('Y') ?> <?= $escape($settings['company_name'] ?? 'LTR Company') ?>. All rights reserved.
             </div>
         </div>
     </footer>

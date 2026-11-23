@@ -354,6 +354,35 @@ ALTER TABLE `reviews`
   ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `pricing_plans`
+--
+
+CREATE TABLE IF NOT EXISTS `pricing_plans` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `price` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `billing_cycle` varchar(50) NOT NULL DEFAULT 'tháng',
+  `description` varchar(255) DEFAULT NULL,
+  `features` text DEFAULT NULL,
+  `is_featured` tinyint(1) NOT NULL DEFAULT 0,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đổ dữ liệu cho bảng `pricing_plans`
+--
+
+INSERT INTO `pricing_plans` (`id`, `name`, `price`, `billing_cycle`, `description`, `features`, `is_featured`, `sort_order`, `status`) VALUES
+(1, 'Gói Bảo Trì Laptop / PC', 299000.00, 'máy / tháng', 'Phù hợp cho cá nhân và văn phòng nhỏ cần chăm sóc và tối ưu thiết bị định kỳ', 'Vệ sinh phần cứng & tra keo tản nhiệt định kỳ\nCài đặt hệ điều hành và phần mềm bản quyền\nHỗ trợ xử lý lỗi kỹ thuật từ xa qua UltraViewer\nKiểm tra và tối ưu hiệu suất ổ cứng, RAM\nMiễn phí kiểm tra tình trạng pin và bàn phím', 0, 1, 1),
+(2, 'Gói Lắp Đặt & Triển Khai Văn Phòng', 1299000.00, 'gói', 'Lựa chọn tối ưu khi setup hoặc nâng cấp hệ sinh thái thiết bị cho công ty', 'Lắp ráp và cài đặt hoàn thiện dàn máy tính văn phòng\nKết nối & chia sẻ máy in không dây nội bộ tốc độ cao\nThi công đường truyền mạng LAN ổn định, bảo mật\nBảo hành 1 đổi 1 linh kiện tận nơi trong 24 giờ\nHỗ trợ kỹ thuật tại chỗ ưu tiên trong ngày', 1, 2, 1),
+(3, 'Gói Thuê Thiết Bị IT Trọn Gói', 3490000.00, 'tháng', 'Giải pháp tối ưu chi phí đầu tư thiết bị phần cứng ban đầu cho doanh nghiệp', 'Trang bị dàn Laptop & Máy in văn phòng đời mới\nMiễn phí 100% mực in và vật tư hao mòn hàng tháng\nBảo dưỡng, vệ sinh thiết bị định kỳ tận nơi\nKỹ thuật viên IT hỗ trợ xử lý sự cố tại chỗ 24/7\nĐổi máy mới tương đương lập tức nếu phát sinh lỗi', 0, 3, 1);
+
 --
 -- Các ràng buộc cho bảng `settings`
 --
