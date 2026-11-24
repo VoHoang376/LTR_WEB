@@ -1,19 +1,27 @@
 <?php
 /**
- * Menu sidebar khu quản trị.
- *
- * Quy ước nhóm: mỗi người chỉ thêm nhóm menu của phần mình vào file này.
- * Phần #3 (Sản phẩm · Danh mục · Đơn hàng) hiện là nhóm đang hoạt động.
+ * Menu sidebar khu Quản trị viên (role = 0) — tách biệt hoàn toàn với CSKH (role = 2).
  */
 $activeMenu = $activeMenu ?? '';
 
 $menuGroups = [
     [
-        'title' => 'Bán hàng',
+        'title' => 'Tổng quan',
+        'items' => [
+            [
+                'key' => 'dashboard',
+                'label' => 'Bảng điều khiển',
+                'icon' => 'bi-speedometer2',
+                'url' => 'index.php?controller=admin&amp;action=dashboard',
+            ],
+        ],
+    ],
+    [
+        'title' => 'Kinh doanh & Đơn hàng',
         'items' => [
             [
                 'key' => 'products',
-                'label' => 'Sản phẩm',
+                'label' => 'Quản lý sản phẩm',
                 'icon' => 'bi-box-seam',
                 'url' => 'index.php?controller=admin&amp;action=products',
             ],
@@ -25,26 +33,61 @@ $menuGroups = [
             ],
             [
                 'key' => 'orders',
-                'label' => 'Đơn hàng',
+                'label' => 'Quản lý đơn hàng',
                 'icon' => 'bi-receipt',
                 'url' => 'index.php?controller=admin&amp;action=orders',
+            ],
+            [
+                'key' => 'pricing',
+                'label' => 'Quản lý bảng giá',
+                'icon' => 'bi-card-checklist',
+                'url' => 'index.php?controller=admin&amp;action=pricing',
             ],
         ],
     ],
     [
-        'title' => 'Hệ thống',
+        'title' => 'Nội dung Website',
         'items' => [
             [
-                'key' => 'dashboard',
-                'label' => 'Tổng quan',
-                'icon' => 'bi-speedometer2',
-                'url' => 'index.php?controller=admin&amp;action=dashboard',
+                'key' => 'about',
+                'label' => 'Trang Giới thiệu',
+                'icon' => 'bi-info-circle',
+                'url' => 'index.php?controller=adminAbout&amp;action=index',
+            ],
+            [
+                'key' => 'posts',
+                'label' => 'Bài viết / Tin tức',
+                'icon' => 'bi-newspaper',
+                'url' => 'index.php?controller=admin&amp;action=posts',
+            ],
+        ],
+    ],
+    [
+        'title' => 'Hệ thống & Phân quyền',
+        'items' => [
+            [
+                'key' => 'users',
+                'label' => 'Tài khoản & Phân quyền',
+                'icon' => 'bi-people',
+                'url' => 'index.php?controller=admin&amp;action=users',
+            ],
+            [
+                'key' => 'settings',
+                'label' => 'Cấu hình website',
+                'icon' => 'bi-gear',
+                'url' => 'index.php?controller=admin&amp;action=settings',
+            ],
+            [
+                'key' => 'profile',
+                'label' => 'Hồ sơ cá nhân',
+                'icon' => 'bi-person-gear',
+                'url' => 'index.php?controller=auth&amp;action=profile',
             ],
             [
                 'key' => 'site',
                 'label' => 'Xem website',
                 'icon' => 'bi-globe2',
-                'url' => 'index.php?controller=product&amp;action=index',
+                'url' => 'index.php',
             ],
         ],
     ],

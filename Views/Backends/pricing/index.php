@@ -44,7 +44,7 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
                            required>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300" for="price">
                             Giá (VNĐ) <span class="text-red-500">*</span>
@@ -94,7 +94,7 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
                               placeholder="Hỗ trợ 24/7&#10;Sao lưu dữ liệu hàng ngày&#10;Dung lượng 100GB..."><?= $escape($editingPlan['features'] ?? '') ?></textarea>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300" for="sort_order">
                             Thứ tự sắp xếp
@@ -146,10 +146,10 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
         </div>
 
         <!-- Plans Table (Right 2 cols) -->
-        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-white/[0.03] xl:col-span-2 overflow-hidden">
-            <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-gray-800">
+        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-white/[0.03] xl:col-span-2 overflow-hidden self-start">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 px-5 py-4 dark:border-gray-800">
                 <h2 class="text-base font-semibold text-gray-800 dark:text-white">Danh sách các gói giá</h2>
-                <a href="index.php?controller=pricing" target="_blank" class="text-xs text-brand-500 hover:underline">
+                <a href="index.php?controller=pricing" target="_blank" class="text-xs text-brand-500 hover:underline whitespace-nowrap">
                     Xem trang bảng giá ngoài &nearr;
                 </a>
             </div>
@@ -157,12 +157,12 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
                 <table class="w-full text-left text-sm text-gray-600 dark:text-gray-300">
                     <thead class="bg-gray-50 text-xs uppercase text-gray-500 dark:bg-white/[0.02] dark:text-gray-400">
                         <tr>
-                            <th class="px-5 py-3.5">Thứ tự</th>
-                            <th class="px-5 py-3.5">Tên gói</th>
-                            <th class="px-5 py-3.5">Giá / Chu kỳ</th>
-                            <th class="px-5 py-3.5">Nổi bật</th>
-                            <th class="px-5 py-3.5">Trạng thái</th>
-                            <th class="px-5 py-3.5 text-right">Thao tác</th>
+                            <th class="px-4 py-3.5 whitespace-nowrap">Thứ tự</th>
+                            <th class="px-4 py-3.5">Tên gói</th>
+                            <th class="px-4 py-3.5 whitespace-nowrap">Giá / Chu kỳ</th>
+                            <th class="px-4 py-3.5 whitespace-nowrap">Nổi bật</th>
+                            <th class="px-4 py-3.5 whitespace-nowrap">Trạng thái</th>
+                            <th class="px-4 py-3.5 text-right whitespace-nowrap">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
@@ -175,15 +175,15 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
                         <?php else: ?>
                             <?php foreach ($plans as $p): ?>
                                 <tr class="transition hover:bg-gray-50/70 dark:hover:bg-white/[0.02]">
-                                    <td class="px-5 py-4 font-mono text-xs text-gray-400">#<?= (int)$p['sort_order'] ?></td>
-                                    <td class="px-5 py-4">
+                                    <td class="px-4 py-4 font-mono text-xs text-gray-400">#<?= (int)$p['sort_order'] ?></td>
+                                    <td class="px-4 py-4">
                                         <div class="font-medium text-gray-800 dark:text-white"><?= $escape($p['name']) ?></div>
                                         <div class="text-[11px] text-gray-400 truncate max-w-xs"><?= $escape($p['description'] ?? '') ?></div>
                                     </td>
-                                    <td class="px-5 py-4 font-semibold text-brand-500 whitespace-nowrap">
+                                    <td class="px-4 py-4 font-semibold text-brand-500 whitespace-nowrap">
                                         <?= number_format((float)$p['price'], 0, ',', '.') ?>₫ <span class="text-xs font-normal text-gray-400">/ <?= $escape($p['billing_cycle']) ?></span>
                                     </td>
-                                    <td class="px-5 py-4 whitespace-nowrap">
+                                    <td class="px-4 py-4 whitespace-nowrap">
                                         <?php if ((int)$p['is_featured'] === 1): ?>
                                             <span class="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
                                                 ★ Nổi bật
@@ -192,7 +192,7 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
                                             <span class="text-xs text-gray-400">-</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="px-5 py-4 whitespace-nowrap">
+                                    <td class="px-4 py-4 whitespace-nowrap">
                                         <?php if ((int)$p['status'] === 1): ?>
                                             <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
                                                 Hiển thị
@@ -203,7 +203,7 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
                                             </span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="px-5 py-4 text-right whitespace-nowrap">
+                                    <td class="px-4 py-4 text-right whitespace-nowrap">
                                         <div class="flex items-center justify-end gap-2">
                                             <a href="index.php?controller=admin&amp;action=pricing&amp;edit=<?= (int)$p['id'] ?>"
                                                class="rounded border border-gray-200 px-2.5 py-1 text-xs text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300">

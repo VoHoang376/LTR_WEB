@@ -226,7 +226,28 @@ if (!function_exists('upload_url')) {
     function upload_url($filename, $folder = 'products')
     {
         // Ảnh mặc định nằm trong Public/img, không nằm trong thư mục uploads.
-        if (empty($filename) || $filename === 'no-image.svg' || basename($filename) !== $filename) {
+        if (empty($filename) || $filename === 'no-image.svg') {
+            return 'Public/img/no-image.svg';
+        }
+
+        $filename = str_replace('\\', '/', (string) $filename);
+        if (strpos($filename, '..') !== false) {
+            return 'Public/img/no-image.svg';
+        }
+
+        // Hỗ trợ cả tên tệp thuần ("printer.svg") lẫn đường dẫn kèm thư mục con ("about/abc.jpg").
+        if (strpos($filename, '/') !== false) {
+            $parts = explode('/', ltrim($filename, '/'), 2);
+            $subFolder = trim($parts[0], '/');
+            $base = basename($parts[1]);
+            if ($subFolder === '' || $base === '' || $base !== $parts[1]) {
+                return 'Public/img/no-image.svg';
+            }
+
+            return 'Public/uploads/' . $subFolder . '/' . rawurlencode($base);
+        }
+
+        if (basename($filename) !== $filename) {
             return 'Public/img/no-image.svg';
         }
 
@@ -347,11 +368,44 @@ if (!function_exists('cart_item_count')) {
     }
 }
 
+if (!function_exists('site_settings')) {
+    /** Đọc và cache bảng settings dùng chung cho mọi layout Frontend/Backend. */
+    function site_settings(PDO $db = null)
+    {
+        static $cached = null;
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        $pdo = $db;
+        if (!$pdo instanceof PDO && isset($GLOBALS['db']) && $GLOBALS['db'] instanceof PDO) {
+            $pdo = $GLOBALS['db'];
+        }
+        if (!$pdo instanceof PDO) {
+            return [];
+        }
+
+        try {
+            $rows = $pdo->query('SELECT key_name, key_value FROM settings')->fetchAll();
+            $cached = [];
+            foreach ($rows as $row) {
+                $cached[$row['key_name']] = $row['key_value'];
+            }
+        } catch (Throwable $exception) {
+            $cached = [];
+        }
+
+        return $cached;
+    }
+}
+
 if (!function_exists('site_name')) {
-    /** Tên website hiển thị trên layout. Khi phần chung có setting('site_name') thì thay tại đây. */
+    /** Tên website hiển thị trên layout (đọc từ bảng settings nếu có). */
     function site_name()
     {
-        return 'LTR Technology';
+        $settings = site_settings();
+
+        return !empty($settings['company_name']) ? (string) $settings['company_name'] : 'LTR Technology';
     }
 }
 
@@ -395,7 +449,7 @@ if (!function_exists('excerpt')) {
     }
 }
 
-if (!function_exists('status_label')) {
+if (!function_exists('order_status_label')) {
     /** Nhãn tiếng Việt cho trạng thái đơn hàng. */
     function order_status_label($status)
     {

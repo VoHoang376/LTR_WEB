@@ -1,15 +1,16 @@
 <?php
 /**
- * Khung trên khu quản trị (sidebar + topbar).
- *
- * Biến nhận từ controller: $pageTitle, $activeMenu, $breadcrumb
- * ($breadcrumb là mảng ['label' => ..., 'url' => ... | null]).
+ * Khung trên khu quản trị cho các trang Sản phẩm / Danh mục / Đơn hàng (Bootstrap 5),
+ * đồng bộ 100% khung sidebar xanh đậm & topbar với Views/Layouts/Backend/header.php.
  */
 $pageTitle = $pageTitle ?? 'Quản trị';
 $activeMenu = $activeMenu ?? '';
 $breadcrumb = $breadcrumb ?? [];
 $adminUser = Permission::user();
 $staffName = $adminUser['fullname'] ?? 'Quản trị viên';
+$adminCssVer = file_exists(__DIR__ . '/../../../Public/css/admin.css')
+    ? filemtime(__DIR__ . '/../../../Public/css/admin.css')
+    : 1;
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -22,7 +23,7 @@ $staffName = $adminUser['fullname'] ?? 'Quản trị viên';
     <link rel="icon" type="image/svg+xml" href="Public/img/favicon.svg">
     <link rel="stylesheet" href="Public/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="Public/vendor/bootstrap-icons/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="Public/css/admin.css">
+    <link rel="stylesheet" href="Public/css/admin.css?v=<?= (int) $adminCssVer ?>">
 </head>
 <body class="admin-body">
 <a class="visually-hidden-focusable bg-white p-2 position-absolute" href="#admin-content">Bỏ qua điều hướng</a>
@@ -43,6 +44,7 @@ $staffName = $adminUser['fullname'] ?? 'Quản trị viên';
         Bài tập lớn Lập trình Web – HK1 2026-2027.
     </div>
 </aside>
+<script>(function(){try{var s=document.getElementById('adminSidebar');var y=sessionStorage.getItem('ltr_admin_sidebar_scroll');if(s&&y!==null){s.scrollTop=parseInt(y,10)||0;}}catch(e){}})();</script>
 
 <div class="admin-backdrop" id="adminBackdrop"></div>
 
@@ -76,32 +78,20 @@ $staffName = $adminUser['fullname'] ?? 'Quản trị viên';
             <?php endif; ?>
         </div>
 
-        <div class="ms-auto d-flex align-items-center gap-2">
-            <a class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex"
-               href="index.php?controller=product&amp;action=index" target="_blank" rel="noopener">
-                <i class="bi bi-box-arrow-up-right me-1" aria-hidden="true"></i>Xem website
+        <div class="admin-topbar-actions">
+            <a class="topbar-btn d-none d-md-inline-flex" href="index.php" target="_blank" rel="noopener">
+                <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                <span>Xem website</span>
             </a>
-            <div class="dropdown">
-                <button class="btn btn-sm btn-light border dropdown-toggle d-flex align-items-center gap-2"
-                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle" aria-hidden="true"></i>
-                    <span class="d-none d-sm-inline"><?= e($staffName) ?></span>
+            <span class="topbar-role-badge is-admin">Admin</span>
+            <span class="small fw-medium text-secondary d-none d-sm-inline"><?= e($staffName) ?></span>
+            <form method="post" action="index.php?controller=auth&amp;action=logout" class="m-0">
+                <?= csrf_field() ?>
+                <button type="submit" class="topbar-btn topbar-btn-danger">
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                    <span>Đăng xuất</span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li><span class="dropdown-item-text small text-muted"><?= e($adminUser['email'] ?? '') ?></span></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="index.php?controller=auth&amp;action=profile">
-                        <i class="bi bi-person-gear me-2" aria-hidden="true"></i>Hồ sơ cá nhân</a></li>
-                    <li>
-                        <form method="post" action="index.php?controller=auth&amp;action=logout" class="px-3 py-1">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                                <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>Đăng xuất
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
+            </form>
         </div>
     </header>
 

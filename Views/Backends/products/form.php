@@ -146,6 +146,15 @@ $thumbnail = $old['thumbnail'] ?? ($product['thumbnail'] ?? 'no-image.svg');
                         <?= isset($errors['thumbnail']) ? e($errors['thumbnail']) : '' ?>
                     </div>
                     <div class="form-text">Để trống nếu giữ nguyên ảnh hiện tại.</div>
+                    <?php if ($isEdit && !empty($product['thumbnail']) && $product['thumbnail'] !== 'no-image.svg'): ?>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="remove_thumbnail" name="remove_thumbnail" value="1"
+                                   onchange="var p = document.getElementById('thumbPreview'); if (p) { p.src = this.checked ? 'Public/img/no-image.svg' : '<?= e(upload_url($thumbnail)) ?>'; }">
+                            <label class="form-check-label small text-danger" for="remove_thumbnail">
+                                Gỡ ảnh đại diện hiện tại (về ảnh mặc định)
+                            </label>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 

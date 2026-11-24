@@ -16,8 +16,69 @@ class FaqController extends BaseController
     public function publicIndex()
     {
         $faqs = $this->contentModel->getPublishedFaqs();
+        $user = Permission::user();
+        $myQuestions = Permission::isMember() ? $this->contentModel->getUserSubmittedFaqs((int) $user['id']) : [];
+        $faqFlash = flash_get('faq');
+        $faqError = $_SESSION['faq_form_error'] ?? null;
+        $faqOld = $_SESSION['faq_form_old'] ?? [
+            'asker_name' => (string) ($user['fullname'] ?? ''),
+            'asker_email' => (string) ($user['email'] ?? ''),
+            'category' => '',
+            'question' => '',
+        ];
+        unset($_SESSION['faq_form_error'], $_SESSION['faq_form_old']);
+
         $pageTitle = 'Câu hỏi thường gặp';
+        $currentPage = 'faq';
         require __DIR__ . '/../Views/Frontends/faq.php';
+    }
+
+    /** Chỉ Thành viên đã đăng nhập (role = 1) mới được gửi câu hỏi mới để chờ Nhân viên CSKH trả lời. */
+    public function ask()
+    {
+        $user = Permission::requireMember(
+            'Tài khoản Quản trị viên và Nhân viên CSKH không sử dụng form đặt câu hỏi của khách hàng.',
+            'Vui lòng đăng nhập bằng tài khoản Thành viên (Khách hàng) để đặt câu hỏi Hỏi/Đáp.',
+            'index.php?controller=faq&action=index'
+        );
+        $this->requirePost();
+
+        $input = [
+            'asker_name' => trim((string) ($_POST['asker_name'] ?? ($user['fullname'] ?? ''))),
+            'asker_email' => trim((string) ($_POST['asker_email'] ?? ($user['email'] ?? ''))),
+            'category' => trim((string) ($_POST['category'] ?? '')),
+            'question' => trim((string) ($_POST['question'] ?? '')),
+        ];
+
+        $error = null;
+        if (!csrf_verify()) {
+            $error = 'Phiên gửi biểu mẫu không hợp lệ. Vui lòng thử lại.';
+        } elseif (mb_strlen($input['asker_name'], 'UTF-8') < 2 || mb_strlen($input['asker_name'], 'UTF-8') > 100) {
+            $error = 'Họ tên phải có từ 2 đến 100 ký tự.';
+        } elseif (strlen($input['asker_email']) > 191 || !filter_var($input['asker_email'], FILTER_VALIDATE_EMAIL)) {
+            $error = 'Vui lòng nhập địa chỉ email hợp lệ.';
+        } elseif (mb_strlen($input['category'], 'UTF-8') > 100) {
+            $error = 'Chủ đề không được vượt quá 100 ký tự.';
+        } elseif (mb_strlen($input['question'], 'UTF-8') < 10 || mb_strlen($input['question'], 'UTF-8') > 255) {
+            $error = 'Nội dung câu hỏi phải có từ 10 đến 255 ký tự.';
+        }
+
+        if ($error !== null) {
+            $_SESSION['faq_form_error'] = $error;
+            $_SESSION['faq_form_old'] = $input;
+            redirect('index.php?controller=faq&action=index#ask-question');
+        }
+
+        $this->contentModel->createCustomerQuestion(
+            (int) $user['id'],
+            $input['asker_name'],
+            $input['asker_email'],
+            $input['category'],
+            $input['question']
+        );
+
+        flash_set('faq', 'Câu hỏi của bạn đã được ghi nhận và chuyển tới Nhân viên Chăm sóc khách hàng. Chúng tôi sẽ phản hồi sớm nhất!', 'success');
+        redirect('index.php?controller=faq&action=index#ask-question');
     }
 
     public function adminIndex()
@@ -155,6 +216,7 @@ class FaqController extends BaseController
     private function renderForm($faq, $error, $isEdit, $pageTitle)
     {
         $csrfToken = $this->csrfToken();
+        $activeAdminPage = 'faq';
         require __DIR__ . '/../Views/Backends/faqs/form.php';
     }
 

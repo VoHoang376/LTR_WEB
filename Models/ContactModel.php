@@ -88,12 +88,30 @@ class ContactModel
     {
         $statement = $this->db->prepare(
             'UPDATE contacts
-             SET status = :status, handled_by = :handled_by
+             SET status = :status, is_read = 1, handled_by = :handled_by
              WHERE id = :id'
         );
         return $statement->execute([
             'status' => (int) $status,
             'handled_by' => $handledBy,
+            'id' => (int) $id,
+        ]);
+    }
+
+    public function reply($id, $replyMessage, $handledBy)
+    {
+        $statement = $this->db->prepare(
+            'UPDATE contacts
+             SET reply_message = :reply_message,
+                 replied_at = NOW(),
+                 status = 1,
+                 is_read = 1,
+                 handled_by = :handled_by
+             WHERE id = :id'
+        );
+        return $statement->execute([
+            'reply_message' => $replyMessage,
+            'handled_by' => (int) $handledBy,
             'id' => (int) $id,
         ]);
     }

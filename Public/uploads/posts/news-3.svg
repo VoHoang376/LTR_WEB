@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g3)"/>
+  <circle cx="150" cy="110" r="120" fill="#ffffff" fill-opacity="0.08"/>
+  <rect x="275" y="155" width="190" height="105" rx="18" fill="#ffffff" fill-opacity="0.95"/>
+  <polygon points="465,180 535,145 535,270 465,235" fill="#e9d5ff"/>
+  <circle cx="350" cy="208" r="28" fill="#4c1d95"/>
+  <circle cx="350" cy="208" r="12" fill="#c4b5fd"/>
+  <text x="400" y="365" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">GIẢI PHÁP CAMERA AN NINH IP67</text>
+</svg>

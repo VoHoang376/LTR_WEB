@@ -23,34 +23,24 @@ Trình soạn thảo Quill 2.0.3 được tải qua jsDelivr CDN và phát hành
 ## Cài đặt
 
 1. Chép thư mục dự án vào `htdocs` (hoặc trỏ VirtualHost) và trỏ document root vào thư mục này.
-2. Tạo CSDL và import cấu trúc:
+2. Tạo CSDL và import cấu trúc + dữ liệu mẫu (đã gộp toàn bộ 4 thành viên & `task3_migration`):
 
    ```bash
-   mysql -u root -e "CREATE DATABASE web_cong_ty CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-   mysql -u root web_cong_ty < web_cong_ty.sql
+   mysql -u root < Database/web_cong_ty.sql
    ```
 
-   > `web_cong_ty.sql` **đã bao gồm** các thay đổi của phần #3 (cột `stock`, bảng
-   > `product_images`, các cột của bảng `orders`). Nếu nhóm đã import bản dump cũ thì chỉ
-   > cần chạy thêm một lần: `mysql -u root web_cong_ty < Database/task3_migration.sql`.
-
-3. (Tuỳ chọn – khuyến nghị khi demo) Nạp dữ liệu mẫu cho phần #3:
-
-   ```bash
-   mysql -u root web_cong_ty < Database/seed_task3.sql
-   ```
-
-4. Cấu hình kết nối bằng biến môi trường `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`.
+3. Cấu hình kết nối bằng biến môi trường `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`.
    Mặc định: `localhost`, `web_cong_ty`, `root`, mật khẩu rỗng.
-5. Mở `index.php?controller=product&action=index` (trang danh sách sản phẩm).
+4. Mở `index.php` (Trang chủ) hoặc `index.php?controller=admin&action=dashboard` (Quản trị).
 
-## Tài khoản mẫu (sau khi nạp `Database/seed_task3.sql`)
+## Tài khoản mẫu (có sẵn trong `Database/web_cong_ty.sql`)
 
 | Email | Mật khẩu | Vai trò |
 | --- | --- | --- |
-| `admin@ltr.vn` | `Admin@123` | Quản trị viên (`role = 0`) |
-| `member1@ltr.vn` | `Member@123` | Thành viên (`role = 1`) |
-| `member2@ltr.vn` | `Member@123` | Thành viên (`role = 1`) |
+| `admin@ltr.vn` | `Admin@123` | Quản trị viên hệ thống (`role = 0`) |
+| `member1@ltr.vn` | `Member@123` | Thành viên / Khách hàng (`role = 1`) |
+| `member2@ltr.vn` | `Member@123` | Thành viên / Khách hàng (`role = 1`) |
+| `staff@ltr.vn` | `Staff@123` | Nhân viên Chăm sóc khách hàng (`role = 2`) |
 
 Đăng ký mới luôn có role thành viên (`1`). Muốn cấp quyền quản trị, cập nhật cột `role`
 thành `0` trong bảng `users`.
@@ -109,7 +99,7 @@ Chi tiết thiết kế, bảo mật, kiểm thử và dàn ý báo cáo: xem [`
 
 Tài khoản đăng ký mới luôn có role thành viên (`1`). Để cấp quyền quản trị, cập nhật cột `role` thành `0` cho tài khoản đó trong bảng `users`. Ảnh tải lên là JPG, PNG hoặc WebP, tối đa 2 MB.
 
-Các trang quản trị Giới thiệu và Hỏi/Đáp yêu cầu đã import `about_sections` và các cột `sort_order`, `created_at` của bảng `faqs` từ `web_cong_ty.sql`.
+Các trang quản trị Giới thiệu và Hỏi/Đáp yêu cầu đã import `about_sections` và các cột `sort_order`, `created_at` của bảng `faqs` từ `Database/web_cong_ty.sql`.
 
 Đăng nhập sử dụng PHP session mặc định, lưu session trên máy chủ; schema không tạo bảng `sessions`.
 

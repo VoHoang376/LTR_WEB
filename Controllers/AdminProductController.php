@@ -133,6 +133,7 @@ class AdminProductController
                 $errors['specifications'] = 'Thông số kỹ thuật không được vượt quá 5.000 ký tự.';
             }
 
+            $removeThumbnail = !empty($_POST['remove_thumbnail']);
             $newThumbnail = null;
             if (!$errors) {
                 // Ảnh đại diện: không bắt buộc, chỉ thay khi có tệp mới.
@@ -144,7 +145,13 @@ class AdminProductController
             }
 
             if (!$errors) {
-                $thumbnail = $newThumbnail !== null ? $newThumbnail : ($product['thumbnail'] ?? null);
+                if ($newThumbnail !== null) {
+                    $thumbnail = $newThumbnail;
+                } elseif ($removeThumbnail) {
+                    $thumbnail = null;
+                } else {
+                    $thumbnail = $product['thumbnail'] ?? null;
+                }
                 if ($thumbnail === 'no-image.svg') {
                     // Ảnh mặc định do layout tự sinh, không lưu vào DB.
                     $thumbnail = null;
@@ -170,9 +177,11 @@ class AdminProductController
                     $message = 'Đã cập nhật sản phẩm "' . $old['name'] . '".';
                 }
 
-                // Thay ảnh đại diện mới thì xoá tệp cũ cho gọn ổ đĩa.
-                if ($newThumbnail !== null && !empty($product['thumbnail'])
-                    && $product['thumbnail'] !== 'no-image.svg') {
+                // Thay ảnh mới hoặc gỡ ảnh -> xoá tệp ảnh upload cũ (không xoá SVG mẫu dùng chung).
+                if (($newThumbnail !== null || $removeThumbnail)
+                    && !empty($product['thumbnail'])
+                    && $product['thumbnail'] !== 'no-image.svg'
+                    && strtolower(pathinfo($product['thumbnail'], PATHINFO_EXTENSION)) !== 'svg') {
                     delete_upload_image($product['thumbnail'], 'products');
                 }
 
@@ -263,7 +272,9 @@ class AdminProductController
 
         if ($image) {
             $this->productModel->deleteImage($imageId, $productId);
-            delete_upload_image($image['image'], 'products');
+            if (strtolower(pathinfo($image['image'], PATHINFO_EXTENSION)) !== 'svg') {
+                delete_upload_image($image['image'], 'products');
+            }
             flash_set('admin', 'Đã xoá ảnh khỏi sản phẩm.', 'success');
         } else {
             flash_set('admin', 'Không tìm thấy ảnh cần xoá.', 'danger');
@@ -300,9 +311,13 @@ class AdminProductController
         $images = $this->productModel->images($productId);
         $this->productModel->delete($productId);
         foreach ($images as $image) {
-            delete_upload_image($image['image'], 'products');
+            if (strtolower(pathinfo($image['image'], PATHINFO_EXTENSION)) !== 'svg') {
+                delete_upload_image($image['image'], 'products');
+            }
         }
-        delete_upload_image($product['thumbnail'], 'products');
+        if (!empty($product['thumbnail']) && strtolower(pathinfo($product['thumbnail'], PATHINFO_EXTENSION)) !== 'svg') {
+            delete_upload_image($product['thumbnail'], 'products');
+        }
 
         flash_set('admin', 'Đã xoá sản phẩm "' . $product['name'] . '".', 'success');
         redirect('index.php?controller=admin&action=products');

@@ -113,8 +113,10 @@
     }
 
     /* --------------------------------------------------------- gửi request */
-    async function sendForm(form) {
-        var body = new FormData(form);
+    async function sendForm(form, body) {
+        if (!body) {
+            body = new FormData(form);
+        }
         if (csrfToken && !body.has('csrf_token')) {
             body.append('csrf_token', csrfToken);
         }
@@ -140,7 +142,7 @@
     }
 
     function setBusy(form, busy) {
-        form.querySelectorAll('button, input').forEach(function (element) {
+        form.querySelectorAll('button, input:not([type="hidden"])').forEach(function (element) {
             element.disabled = busy;
         });
         form.classList.toggle('is-busy', busy);
@@ -158,11 +160,22 @@
         }
 
         event.preventDefault();
+        // Đọc FormData TRƯỚC khi disable nút/input để không làm mất dữ liệu input!
+        var formData = new FormData(form);
         setBusy(form, true);
 
         try {
-            var result = await sendForm(form);
+            var result = await sendForm(form, formData);
             var payload = result.payload || {};
+
+            if (result.status === 401 && payload.require_login) {
+                if (typeof window.showLoginRequiredModal === 'function') {
+                    window.showLoginRequiredModal(payload.message);
+                } else {
+                    toast(payload.message || 'Vui lòng đăng nhập để đặt hàng.', 'warning');
+                }
+                return;
+            }
 
             if (result.status === 419) {
                 toast('Phiên làm việc đã hết hạn, vui lòng tải lại trang.', 'danger');

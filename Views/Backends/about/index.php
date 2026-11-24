@@ -36,7 +36,7 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
                             <?php if (!empty($section['image_url'])): ?>
                                 <img
                                     class="h-12 w-16 rounded-lg object-cover"
-                                    src="<?= $escape('Public/uploads/' . rawurlencode(basename($section['image_url']))) ?>"
+                                    src="<?= $escape(upload_url($section['image_url'], 'about')) ?>"
                                     alt="">
                             <?php else: ?>
                                 <span class="text-gray-400">Chưa có ảnh</span>

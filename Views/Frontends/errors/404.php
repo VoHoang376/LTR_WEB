@@ -11,11 +11,11 @@ require __DIR__ . '/../partials/header.php';
             Trang hoặc sản phẩm bạn tìm không tồn tại, đã bị xoá hoặc tạm ngừng hiển thị.
         </p>
         <div class="d-flex flex-wrap justify-content-center gap-2">
-            <a class="btn btn-brand" href="index.php?controller=product&amp;action=index">
-                <i class="bi bi-bag me-1" aria-hidden="true"></i>Xem sản phẩm
+            <a class="btn btn-brand" href="index.php">
+                <i class="bi bi-house me-1" aria-hidden="true"></i>Trang chủ
             </a>
-            <a class="btn btn-soft" href="index.php?controller=cart&amp;action=index">
-                <i class="bi bi-cart3 me-1" aria-hidden="true"></i>Giỏ hàng
+            <a class="btn btn-soft" href="index.php?controller=product&amp;action=index">
+                <i class="bi bi-bag me-1" aria-hidden="true"></i>Xem sản phẩm
             </a>
         </div>
     </div>

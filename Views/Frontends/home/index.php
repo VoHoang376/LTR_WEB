@@ -122,58 +122,59 @@
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
             <h2 class="fw-bold mb-0">Sản Phẩm Nổi Bật</h2>
-            <a href="index.php?controller=product" class="btn btn-outline-primary">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+            <a href="index.php?controller=product&amp;action=index" class="btn btn-outline-primary">Xem tất cả <i class="bi bi-arrow-right"></i></a>
         </div>
-        <div class="row g-4">
-            <div class="col-sm-6 col-lg-3">
-                <article class="card product-card h-100 border-0 shadow-sm">
-                    <div class="product-img-placeholder placeholder-1 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-laptop display-1 text-white opacity-75"></i>
+        <?php if (!empty($featuredProducts)): ?>
+            <div class="row g-4">
+                <?php foreach ($featuredProducts as $product): ?>
+                    <?php
+                    $productUrl = 'index.php?controller=product&action=show&slug=' . rawurlencode($product['slug']);
+                    $stock = (int) ($product['stock'] ?? 0);
+                    ?>
+                    <div class="col-sm-6 col-lg-3">
+                        <article class="product-card">
+                            <a class="product-thumb" href="<?= $escape($productUrl) ?>">
+                                <img src="<?= $escape(upload_url($product['thumbnail'])) ?>"
+                                     alt="<?= $escape($product['name']) ?>" loading="lazy" width="400" height="300">
+                                <?php if (!empty($product['category_name'])): ?>
+                                    <span class="product-badge"><?= $escape($product['category_name']) ?></span>
+                                <?php endif; ?>
+                            </a>
+                            <div class="card-body">
+                                <h3 class="product-name">
+                                    <a href="<?= $escape($productUrl) ?>"><?= $escape($product['name']) ?></a>
+                                </h3>
+                                <p class="product-desc"><?= $escape(excerpt($product['description'] ?? '', 80)) ?></p>
+                                <div class="mt-auto d-flex justify-content-between align-items-center gap-2 card-actions">
+                                    <span class="price"><?= $escape(format_price($product['price'])) ?></span>
+                                    <?php if (Permission::isMember()): ?>
+                                        <form class="js-cart-form" method="post" action="index.php?controller=cart&amp;action=add">
+                                            <?= csrf_field() ?>
+                                            <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-brand btn-sm" <?= $stock <= 0 ? 'disabled' : '' ?>>
+                                                <i class="bi bi-cart-plus me-1" aria-hidden="true"></i>Thêm
+                                            </button>
+                                        </form>
+                                    <?php elseif (!Permission::isLoggedIn()): ?>
+                                        <button type="button" class="btn btn-brand btn-sm"
+                                                <?= $stock <= 0 ? 'disabled' : '' ?>
+                                                data-require-login="Bạn chưa đăng nhập nên không thể đặt hàng. Vui lòng đăng nhập bằng tài khoản Thành viên (Khách hàng) để mua sản phẩm."
+                                                data-login-redirect="<?= $escape($productUrl) ?>">
+                                            <i class="bi bi-cart-plus me-1" aria-hidden="true"></i>Thêm
+                                        </button>
+                                    <?php else: ?>
+                                        <a href="<?= $escape($productUrl) ?>" class="btn btn-soft btn-sm">Chi tiết</a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </article>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Laptop Văn Phòng</h5>
-                        <p class="text-secondary small mb-2">Hiệu năng mạnh mẽ, thiết kế thanh lịch, pin trâu.</p>
-                        <p class="text-primary fw-bold mb-0">15.990.000₫</p>
-                    </div>
-                </article>
+                <?php endforeach; ?>
             </div>
-            <div class="col-sm-6 col-lg-3">
-                <article class="card product-card h-100 border-0 shadow-sm">
-                    <div class="product-img-placeholder placeholder-2 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-printer display-1 text-white opacity-75"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Máy In Đa Năng</h5>
-                        <p class="text-secondary small mb-2">In, scan, copy chất lượng cao, kết nối Wi-Fi tiện lợi.</p>
-                        <p class="text-primary fw-bold mb-0">4.590.000₫</p>
-                    </div>
-                </article>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <article class="card product-card h-100 border-0 shadow-sm">
-                    <div class="product-img-placeholder placeholder-3 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-display display-1 text-white opacity-75"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Màn Hình 27 inch</h5>
-                        <p class="text-secondary small mb-2">Độ phân giải 4K, tấm nền IPS, màu sắc chính xác.</p>
-                        <p class="text-primary fw-bold mb-0">7.490.000₫</p>
-                    </div>
-                </article>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <article class="card product-card h-100 border-0 shadow-sm">
-                    <div class="product-img-placeholder placeholder-4 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-headphones display-1 text-white opacity-75"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Tai Nghe Bluetooth</h5>
-                        <p class="text-secondary small mb-2">Chống ồn chủ động, âm thanh Hi-Res, pin 30 giờ.</p>
-                        <p class="text-primary fw-bold mb-0">2.890.000₫</p>
-                    </div>
-                </article>
-            </div>
-        </div>
+        <?php else: ?>
+            <div class="alert alert-light border text-center text-secondary">Chưa có sản phẩm nào được công bố.</div>
+        <?php endif; ?>
     </div>
 </section>
 
@@ -182,55 +183,40 @@
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
             <h2 class="fw-bold mb-0">Tin Tức Mới Nhất</h2>
-            <a href="index.php?controller=post" class="btn btn-outline-primary">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+            <a href="index.php?controller=post&amp;action=index" class="btn btn-outline-primary">Xem tất cả <i class="bi bi-arrow-right"></i></a>
         </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <article class="card news-card h-100 border-0 shadow-sm">
-                    <div class="news-img-placeholder news-placeholder-1 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-newspaper display-1 text-white opacity-75"></i>
+        <?php if (!empty($latestPosts)): ?>
+            <div class="row g-4">
+                <?php foreach ($latestPosts as $post): ?>
+                    <?php $postUrl = 'index.php?controller=post&action=show&slug=' . rawurlencode($post['slug']); ?>
+                    <div class="col-md-4">
+                        <article class="card news-card h-100 border-0 shadow-sm">
+                            <a href="<?= $escape($postUrl) ?>" class="d-block overflow-hidden" style="height: 190px; background: #f1f5f9;">
+                                <img src="<?= $escape(upload_url($post['thumbnail'], 'posts')) ?>"
+                                     alt="<?= $escape($post['title']) ?>"
+                                     class="w-100 h-100 object-fit-cover" loading="lazy">
+                            </a>
+                            <div class="card-body">
+                                <small class="text-secondary">
+                                    <i class="bi bi-calendar3 me-1" aria-hidden="true"></i><?= $escape(format_datetime($post['created_at'])) ?>
+                                </small>
+                                <h3 class="h5 card-title mt-2">
+                                    <a href="<?= $escape($postUrl) ?>" class="text-dark"><?= $escape($post['title']) ?></a>
+                                </h3>
+                                <p class="text-secondary small mb-0"><?= $escape(excerpt($post['summary'] ?: $post['content'], 115)) ?></p>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 pb-3">
+                                <a href="<?= $escape($postUrl) ?>" class="text-primary text-decoration-none fw-medium">
+                                    Đọc tiếp <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </article>
                     </div>
-                    <div class="card-body">
-                        <small class="text-secondary"><i class="bi bi-calendar3 me-1"></i>20/11/2026</small>
-                        <h5 class="card-title mt-2">Ra Mắt Dòng Sản Phẩm Mới 2027</h5>
-                        <p class="text-secondary">Chúng tôi vui mừng giới thiệu dòng sản phẩm công nghệ mới nhất, đáp ứng xu hướng thị trường hiện đại...</p>
-                    </div>
-                    <div class="card-footer bg-transparent border-0 pb-3">
-                        <a href="index.php?controller=post" class="text-primary text-decoration-none fw-medium">Đọc tiếp <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                </article>
+                <?php endforeach; ?>
             </div>
-            <div class="col-md-4">
-                <article class="card news-card h-100 border-0 shadow-sm">
-                    <div class="news-img-placeholder news-placeholder-2 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-graph-up-arrow display-1 text-white opacity-75"></i>
-                    </div>
-                    <div class="card-body">
-                        <small class="text-secondary"><i class="bi bi-calendar3 me-1"></i>15/11/2026</small>
-                        <h5 class="card-title mt-2">Kết Quả Kinh Doanh Quý III/2026</h5>
-                        <p class="text-secondary">Doanh thu quý III tăng trưởng 25% so với cùng kỳ năm ngoái, khẳng định vị thế trên thị trường...</p>
-                    </div>
-                    <div class="card-footer bg-transparent border-0 pb-3">
-                        <a href="index.php?controller=post" class="text-primary text-decoration-none fw-medium">Đọc tiếp <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                </article>
-            </div>
-            <div class="col-md-4">
-                <article class="card news-card h-100 border-0 shadow-sm">
-                    <div class="news-img-placeholder news-placeholder-3 d-flex align-items-center justify-content-center">
-                        <i class="bi bi-people display-1 text-white opacity-75"></i>
-                    </div>
-                    <div class="card-body">
-                        <small class="text-secondary"><i class="bi bi-calendar3 me-1"></i>10/11/2026</small>
-                        <h5 class="card-title mt-2">Hội Thảo Công Nghệ Số 2026</h5>
-                        <p class="text-secondary">LTR Company đồng tổ chức hội thảo về chuyển đổi số cho doanh nghiệp vừa và nhỏ tại TP.HCM...</p>
-                    </div>
-                    <div class="card-footer bg-transparent border-0 pb-3">
-                        <a href="index.php?controller=post" class="text-primary text-decoration-none fw-medium">Đọc tiếp <i class="bi bi-arrow-right"></i></a>
-                    </div>
-                </article>
-            </div>
-        </div>
+        <?php else: ?>
+            <div class="alert alert-light border text-center text-secondary">Chưa có bài viết tin tức nào.</div>
+        <?php endif; ?>
     </div>
 </section>
 

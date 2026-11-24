@@ -48,7 +48,7 @@ require __DIR__ . '/../partials/header.php';
                         <?php foreach ($cart['items'] as $item): ?>
                             <?php
                             $product = $item['product'];
-                            $productUrl = 'index.php?controller=product&amp;action=show&amp;slug=' . rawurlencode($product['slug']);
+                            $productUrl = 'index.php?controller=product&action=show&slug=' . rawurlencode($product['slug']);
                             $maxQuantity = max(1, min(99, (int) $product['stock']));
                             ?>
                             <div class="cart-item" data-cart-row="<?= (int) $product['id'] ?>">
@@ -145,18 +145,18 @@ require __DIR__ . '/../partials/header.php';
                             <span class="price" data-cart-subtotal><?= e(format_price($cart['subtotal'])) ?></span>
                         </div>
 
-                        <?php if (Permission::isLoggedIn()): ?>
+                        <?php if (Permission::isMember()): ?>
                             <a class="btn btn-brand w-100 mt-3"
                                href="index.php?controller=checkout&amp;action=index">
                                 <i class="bi bi-credit-card me-2" aria-hidden="true"></i>Tiến hành thanh toán
                             </a>
                         <?php else: ?>
                             <a class="btn btn-brand w-100 mt-3" href="index.php?controller=checkout&amp;action=index">
-                                <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Đăng nhập để thanh toán
+                                <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Đăng nhập để đặt hàng
                             </a>
                             <p class="small text-secondary mt-2 mb-0">
-                                Bạn cần đăng nhập để đặt hàng và theo dõi đơn hàng của mình.
-                                Sau khi đăng nhập, bạn sẽ được đưa trở lại trang thanh toán.
+                                Bạn cần đăng nhập bằng <strong>tài khoản Thành viên</strong> để tiến hành đặt hàng và theo dõi đơn.
+                                Chưa có tài khoản? <a href="index.php?controller=auth&amp;action=register">Đăng ký ngay</a>.
                             </p>
                         <?php endif; ?>
 

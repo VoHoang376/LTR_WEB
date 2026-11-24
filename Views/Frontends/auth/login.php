@@ -5,6 +5,10 @@ require __DIR__ . '/../../Layouts/Frontend/header.php';
 <section class="card auth-card border-0 shadow-sm">
     <div class="card-body p-4 p-md-5">
         <h1 class="h3 mb-4 text-center">Đăng nhập</h1>
+        <?php $authFlash = flash_get('auth'); ?>
+        <?php if ($authFlash !== null): ?>
+            <div class="alert alert-<?= $escape($authFlash['type']) ?>" role="status"><?= $escape($authFlash['message']) ?></div>
+        <?php endif; ?>
         <?php if ($error !== null): ?>
             <div class="alert alert-danger" role="alert"><?= $escape($error) ?></div>
         <?php endif; ?>

@@ -17,6 +17,15 @@ class CartController
 
     public function __construct(PDO $db)
     {
+        $redirectAfterLogin = ($_SERVER['REQUEST_METHOD'] === 'POST')
+            ? 'index.php?controller=product&action=index'
+            : 'index.php?controller=cart&action=index';
+
+        Permission::requireMember(
+            'Tài khoản Quản trị viên và Nhân viên CSKH chỉ phục vụ quản lý/hỗ trợ, không được thực hiện chức năng mua hàng.',
+            'Vui lòng đăng nhập bằng tài khoản Thành viên (Khách hàng) để thêm vào giỏ hàng và đặt hàng.',
+            $redirectAfterLogin
+        );
         $this->productModel = new ProductModel($db);
         $this->cartModel = new CartModel($this->productModel);
     }

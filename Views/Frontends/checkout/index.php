@@ -38,7 +38,7 @@ $fieldError = static function ($field) use ($errors) {
             <form class="panel js-validate needs-validation" method="post" novalidate
                   action="index.php?controller=checkout&amp;action=index">
                 <?= csrf_field() ?>
-                <div class="panel-header">Thông tin người nhận</div>
+                <div class="panel-header">Thông tin người nhận &amp; Địa chỉ giao hàng</div>
                 <div class="panel-body">
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -46,21 +46,32 @@ $fieldError = static function ($field) use ($errors) {
                             <input type="text" class="form-control<?= $fieldError('receiver_name') ?>" id="receiver_name"
                                    name="receiver_name" value="<?= e($old['receiver_name']) ?>"
                                    minlength="2" maxlength="100" required>
-                            <div class="invalid-feedback">Vui lòng nhập họ tên (2–100 ký tự).</div>
+                            <div class="invalid-feedback"><?= isset($errors['receiver_name']) ? e($errors['receiver_name']) : 'Vui lòng nhập họ tên (2–100 ký tự).' ?></div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label" for="receiver_phone">Số điện thoại <span class="text-danger">*</span></label>
                             <input type="tel" class="form-control<?= $fieldError('receiver_phone') ?>" id="receiver_phone"
                                    name="receiver_phone" value="<?= e($old['receiver_phone']) ?>"
                                    inputmode="numeric" pattern="0[0-9]{9}" maxlength="20" required>
-                            <div class="invalid-feedback">Số điện thoại gồm 10 số và bắt đầu bằng 0.</div>
+                            <div class="invalid-feedback"><?= isset($errors['receiver_phone']) ? e($errors['receiver_phone']) : 'Số điện thoại gồm 10 số và bắt đầu bằng 0.' ?></div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label" for="shipping_address">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                            <label class="form-label" for="receiver_email">
+                                Email nhận thông báo đơn hàng
+                            </label>
+                            <input type="email" class="form-control<?= $fieldError('receiver_email') ?>" id="receiver_email"
+                                   name="receiver_email" value="<?= e($old['receiver_email']) ?>"
+                                   maxlength="191" placeholder="tenban@example.com">
+                            <div class="invalid-feedback"><?= isset($errors['receiver_email']) ? e($errors['receiver_email']) : 'Vui lòng nhập địa chỉ email hợp lệ.' ?></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold" for="shipping_address">
+                                Địa chỉ giao hàng chi tiết <span class="text-danger">*</span>
+                            </label>
                             <input type="text" class="form-control<?= $fieldError('shipping_address') ?>" id="shipping_address"
                                    name="shipping_address" value="<?= e($old['shipping_address']) ?>"
-                                   minlength="5" maxlength="255" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành" required>
-                            <div class="invalid-feedback">Vui lòng nhập địa chỉ đầy đủ (5–255 ký tự).</div>
+                                   minlength="10" maxlength="255" placeholder="Nhập rõ: Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố" required>
+                            <div class="invalid-feedback"><?= isset($errors['shipping_address']) ? e($errors['shipping_address']) : 'Bắt buộc nhập địa chỉ giao hàng chi tiết (tối thiểu 10 ký tự).' ?></div>
                         </div>
                         <div class="col-12">
                             <label class="form-label" for="note">Ghi chú cho người bán</label>

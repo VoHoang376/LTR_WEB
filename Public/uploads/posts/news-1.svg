@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g1)"/>
+  <circle cx="680" cy="90" r="140" fill="#ffffff" fill-opacity="0.08"/>
+  <circle cx="130" cy="390" r="110" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="290" y="130" width="220" height="145" rx="18" fill="#ffffff" fill-opacity="0.92"/>
+  <rect x="330" y="95" width="140" height="50" rx="8" fill="#dbeafe"/>
+  <rect x="325" y="210" width="150" height="90" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="3"/>
+  <line x1="348" y1="238" x2="452" y2="238" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+  <line x1="348" y1="262" x2="430" y2="262" stroke="#93c5fd" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="472" cy="168" r="9" fill="#10b981"/>
+  <text x="400" y="365" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">THIẾT BỊ IN ẤN VĂN PHÒNG</text>
+</svg>

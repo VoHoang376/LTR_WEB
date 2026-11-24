@@ -1,3 +1,59 @@
+(function () {
+    'use strict';
+
+    function currentRelativeTarget() {
+        var search = window.location.search || '';
+        return 'index.php' + search;
+    }
+
+    /** Hiển thị bảng thông báo (modal) yêu cầu đăng nhập cho khách vãng lai. */
+    window.showLoginRequiredModal = function (message, redirectUrl) {
+        var notice = message || 'Vui lòng đăng nhập bằng tài khoản Thành viên (Khách hàng) để sử dụng chức năng này.';
+        var target = redirectUrl || currentRelativeTarget();
+        var modalEl = document.getElementById('loginRequiredModal');
+
+        if (!modalEl) {
+            window.alert(notice);
+            window.location.href = 'index.php?controller=auth&action=login&redirect=' + encodeURIComponent(target);
+            return;
+        }
+
+        var msgEl = document.getElementById('loginRequiredMessage');
+        if (msgEl) {
+            msgEl.textContent = notice;
+        }
+
+        var loginBtn = document.getElementById('loginRequiredLoginBtn');
+        if (loginBtn) {
+            loginBtn.setAttribute('href', 'index.php?controller=auth&action=login&redirect=' + encodeURIComponent(target));
+        }
+
+        var registerBtn = document.getElementById('loginRequiredRegisterBtn');
+        if (registerBtn) {
+            registerBtn.setAttribute('href', 'index.php?controller=auth&action=register&redirect=' + encodeURIComponent(target));
+        }
+
+        if (window.bootstrap && window.bootstrap.Modal) {
+            window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
+        } else {
+            window.alert(notice);
+            window.location.href = 'index.php?controller=auth&action=login&redirect=' + encodeURIComponent(target);
+        }
+    };
+
+    document.addEventListener('click', function (event) {
+        var trigger = event.target.closest('[data-require-login]');
+        if (!trigger) {
+            return;
+        }
+        event.preventDefault();
+        window.showLoginRequiredModal(
+            trigger.getAttribute('data-require-login'),
+            trigger.getAttribute('data-login-redirect') || ''
+        );
+    });
+}());
+
 document.addEventListener('DOMContentLoaded', function () {
     var contactForm = document.getElementById('contactForm');
     if (!contactForm) {

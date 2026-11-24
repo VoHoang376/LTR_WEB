@@ -22,6 +22,7 @@ class AboutController extends BaseController
         unset($section);
 
         $pageTitle = 'Giới thiệu';
+        $currentPage = 'about';
         require __DIR__ . '/../Views/Frontends/about.php';
     }
 
@@ -138,6 +139,7 @@ class AboutController extends BaseController
             return;
         }
 
+        $removeImage = !empty($_POST['remove_image']);
         $newImagePath = null;
         $error = $this->storeAboutImage($_FILES['image'] ?? null, $newImagePath);
         if ($error !== null) {
@@ -148,7 +150,14 @@ class AboutController extends BaseController
             return;
         }
 
-        $imagePath = $newImagePath !== null ? $newImagePath : $existingSection['image_url'];
+        if ($newImagePath !== null) {
+            $imagePath = $newImagePath;
+        } elseif ($removeImage) {
+            $imagePath = null;
+        } else {
+            $imagePath = $existingSection['image_url'];
+        }
+
         try {
             $this->contentModel->updateAboutSection(
                 $id,
@@ -164,7 +173,7 @@ class AboutController extends BaseController
             throw $exception;
         }
 
-        if ($newImagePath !== null) {
+        if ($newImagePath !== null || $removeImage) {
             $this->deleteStoredImage($existingSection['image_url']);
         }
 
@@ -202,6 +211,7 @@ class AboutController extends BaseController
     private function renderForm($section, $error, $isEdit, $pageTitle)
     {
         $csrfToken = $this->csrfToken();
+        $activeAdminPage = 'about';
         require __DIR__ . '/../Views/Backends/about/form.php';
     }
 

@@ -81,4 +81,27 @@ class UserModel
             'id' => $id,
         ]);
     }
+
+    /** Danh sách toàn bộ tài khoản (dành cho Quản trị viên phân quyền / khóa mở). */
+    public function getAll()
+    {
+        return $this->db->query(
+            'SELECT id, email, fullname, phone, role, status, created_at
+             FROM users
+             ORDER BY role ASC, created_at DESC, id DESC'
+        )->fetchAll();
+    }
+
+    public function updateRoleAndStatus($id, $role, $status)
+    {
+        $statement = $this->db->prepare(
+            'UPDATE users SET role = :role, status = :status WHERE id = :id'
+        );
+
+        return $statement->execute([
+            'role' => (int) $role,
+            'status' => (int) $status,
+            'id' => (int) $id,
+        ]);
+    }
 }

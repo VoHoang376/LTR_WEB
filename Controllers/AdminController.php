@@ -28,37 +28,80 @@ class AdminController
 
     private function requireAdmin()
     {
-        if (empty($_SESSION['user_id'])) {
-            header('Location: index.php?controller=auth&action=login');
-            exit;
-        }
-
-        $user = $this->userModel->findById($_SESSION['user_id']);
-        if (!$user || (int) $user['status'] !== 1) {
-            $_SESSION = [];
-            session_destroy();
-            header('Location: index.php?controller=auth&action=login');
-            exit;
-        }
-
-        if ((int) $user['role'] !== 0) {
-            http_response_code(403);
-            exit('Bạn không có quyền truy cập trang quản trị. Vui lòng liên hệ quản trị viên.');
-        }
-
-        $this->currentUser = $user;
+        $this->currentUser = Permission::requireAdmin();
     }
 
     public function dashboard()
     {
-        $pageTitle = 'Bảng điều khiển';
+        $pageTitle = 'Bảng điều khiển quản trị';
         $activeAdminPage = 'dashboard';
 
-        $totalContacts = $this->contactModel->countAll();
-        $unprocessedContacts = $this->contactModel->countUnprocessed();
-        $recentContacts = $this->contactModel->getPaginated(1, 5);
+        require_once __DIR__ . '/../Models/ProductModel.php';
+        require_once __DIR__ . '/../Models/OrderModel.php';
+        require_once __DIR__ . '/../Models/PostModel.php';
+        require_once __DIR__ . '/../Models/ContentModel.php';
+
+        $productModel = new ProductModel($this->db);
+        $orderModel = new OrderModel($this->db);
+        $postModel = new PostModel($this->db);
+        $contentModel = new ContentModel($this->db);
+
+        $productStats = $productModel->stats();
+        $orderCounts = $orderModel->statusCounts();
+        $totalOrders = array_sum($orderCounts);
+        $pendingOrders = (int) ($orderCounts[OrderModel::STATUS_PENDING] ?? 0);
+        $completedRevenue = $orderModel->completedRevenue();
+        $totalPosts = $postModel->getTotalPosts();
+        $totalAboutSections = $contentModel->countAboutSections();
+        $totalPlans = count($this->pricingModel->getAll());
+        $allUsers = $this->userModel->getAll();
+        $totalUsers = count($allUsers);
+        $staffCount = count(array_filter($allUsers, static function ($u) {
+            return (int) $u['role'] === Permission::ROLE_STAFF;
+        }));
+        $recentOrders = $orderModel->search(['page' => 1, 'per_page' => 5])['items'];
 
         require __DIR__ . '/../Views/Backends/dashboard.php';
+    }
+
+    public function users()
+    {
+        $pageTitle = 'Quản lý tài khoản & Phân quyền';
+        $activeAdminPage = 'users';
+
+        $users = $this->userModel->getAll();
+        $currentAdminId = (int) $this->currentUser['id'];
+        $success = $_SESSION['admin_success'] ?? null;
+        $error = $_SESSION['admin_error'] ?? null;
+        unset($_SESSION['admin_success'], $_SESSION['admin_error']);
+
+        require __DIR__ . '/../Views/Backends/users/index.php';
+    }
+
+    public function updateUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$this->hasValidCsrfToken()) {
+            $_SESSION['admin_error'] = 'Yêu cầu không hợp lệ hoặc phiên đã hết hạn.';
+            redirect('index.php?controller=admin&action=users');
+        }
+
+        $id = (int) ($_POST['id'] ?? 0);
+        $role = (int) ($_POST['role'] ?? -1);
+        $status = (int) ($_POST['status'] ?? -1);
+
+        if ($id === (int) $this->currentUser['id']) {
+            $_SESSION['admin_error'] = 'Bạn không thể tự thay đổi vai trò hoặc khóa chính tài khoản của mình.';
+        } elseif ($id <= 0 || !$this->userModel->findById($id)) {
+            $_SESSION['admin_error'] = 'Không tìm thấy tài khoản cần cập nhật.';
+        } elseif (!in_array($role, [Permission::ROLE_ADMIN, Permission::ROLE_MEMBER, Permission::ROLE_STAFF], true)
+            || !in_array($status, [0, 1], true)) {
+            $_SESSION['admin_error'] = 'Vai trò hoặc trạng thái không hợp lệ.';
+        } else {
+            $this->userModel->updateRoleAndStatus($id, $role, $status);
+            $_SESSION['admin_success'] = 'Đã cập nhật phân quyền & trạng thái cho tài khoản #' . $id . '.';
+        }
+
+        redirect('index.php?controller=admin&action=users');
     }
 
     public function contacts()

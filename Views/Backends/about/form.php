@@ -7,7 +7,7 @@ $formAction = $isEdit
     ? 'index.php?controller=adminAbout&action=update'
     : 'index.php?controller=adminAbout&action=store';
 $imageUrl = !empty($section['image_url'])
-    ? 'Public/uploads/' . rawurlencode(basename($section['image_url']))
+    ? upload_url($section['image_url'], 'about')
     : null;
 require __DIR__ . '/../../Layouts/Backend/header.php';
 ?>
@@ -55,7 +55,13 @@ require __DIR__ . '/../../Layouts/Backend/header.php';
                     type="file"
                     accept="image/jpeg,image/png,image/webp">
                 <?php if ($imageUrl !== null): ?>
-                    <img class="mt-3 h-24 rounded-lg object-cover" src="<?= $escape($imageUrl) ?>" alt="Ảnh hiện tại">
+                    <div class="mt-3 flex items-center justify-between gap-3 rounded-lg border border-gray-200 bg-gray-50 p-2.5">
+                        <img class="h-20 rounded-lg object-cover" src="<?= $escape($imageUrl) ?>" alt="Ảnh hiện tại">
+                        <label class="flex items-center gap-2 text-xs font-medium text-red-600 cursor-pointer select-none">
+                            <input type="checkbox" name="remove_image" value="1" class="h-4 w-4 rounded border-gray-300 text-red-600">
+                            <span>Gỡ ảnh minh họa (không dùng ảnh)</span>
+                        </label>
+                    </div>
                 <?php endif; ?>
             </div>
             <div>

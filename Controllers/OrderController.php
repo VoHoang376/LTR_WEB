@@ -12,13 +12,12 @@ class OrderController
 
     public function __construct(PDO $db)
     {
+        Permission::requireMember('Mục "Đơn hàng của tôi" chỉ dành cho tài khoản Thành viên (Khách hàng). Quản trị viên vui lòng xem tại mục Quản lý đơn hàng.');
         $this->orderModel = new OrderModel($db);
     }
 
     public function index()
     {
-        Permission::requireLogin();
-
         $result = $this->orderModel->paginateByUser(
             (int) Permission::id(),
             max(1, (int) ($_GET['page'] ?? 1)),
@@ -34,8 +33,6 @@ class OrderController
 
     public function show()
     {
-        Permission::requireLogin();
-
         $orderId = (int) ($_GET['id'] ?? 0);
         $order = $this->orderModel->findForUser($orderId, (int) Permission::id());
         if (!$order) {
@@ -58,8 +55,6 @@ class OrderController
     /** Thành viên tự huỷ đơn khi đơn còn "Chờ xác nhận". */
     public function cancel()
     {
-        Permission::requireLogin();
-
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_verify()) {
             flash_set('orders', 'Yêu cầu không hợp lệ, vui lòng thử lại.', 'danger');
             redirect('index.php?controller=order&action=index');

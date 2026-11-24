@@ -26,6 +26,7 @@ class ContactController
         ];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            Permission::requireCustomer('Tài khoản Quản trị viên và Nhân viên CSKH không gửi biểu mẫu liên hệ khách hàng.');
             $old['fullname'] = trim($_POST['fullname'] ?? '');
             $old['email'] = trim($_POST['email'] ?? '');
             $old['phone'] = trim($_POST['phone'] ?? '');

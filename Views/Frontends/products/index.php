@@ -8,7 +8,7 @@ require __DIR__ . '/../partials/header.php';
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.php?controller=product&amp;action=index">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="index.php">Trang chủ</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Sản phẩm</li>
             </ol>
         </nav>
@@ -118,7 +118,7 @@ require __DIR__ . '/../partials/header.php';
                     <?php foreach ($result['items'] as $product): ?>
                         <?php
                         $stock = (int) $product['stock'];
-                        $productUrl = 'index.php?controller=product&amp;action=show&amp;slug=' . rawurlencode($product['slug']);
+                        $productUrl = 'index.php?controller=product&action=show&slug=' . rawurlencode($product['slug']);
                         ?>
                         <div class="col-6 col-xl-4">
                             <article class="product-card">
@@ -143,16 +143,27 @@ require __DIR__ . '/../partials/header.php';
                                     <p class="product-desc"><?= e(excerpt($product['description'], 80)) ?></p>
                                     <div class="mt-auto d-flex justify-content-between align-items-center gap-2 card-actions">
                                         <span class="price"><?= e(format_price($product['price'])) ?></span>
-                                        <form class="js-cart-form" method="post"
-                                              action="index.php?controller=cart&amp;action=add">
-                                            <?= csrf_field() ?>
-                                            <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-                                            <input type="hidden" name="quantity" value="1">
-                                            <button type="submit" class="btn btn-brand btn-sm"
-                                                    <?= $stock <= 0 ? 'disabled' : '' ?>>
+                                        <?php if (Permission::isMember()): ?>
+                                            <form class="js-cart-form" method="post"
+                                                  action="index.php?controller=cart&amp;action=add">
+                                                <?= csrf_field() ?>
+                                                <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="submit" class="btn btn-brand btn-sm"
+                                                        <?= $stock <= 0 ? 'disabled' : '' ?>>
+                                                    <i class="bi bi-cart-plus me-1" aria-hidden="true"></i>Thêm
+                                                </button>
+                                            </form>
+                                        <?php elseif (!Permission::isLoggedIn()): ?>
+                                            <button type="button" class="btn btn-brand btn-sm"
+                                                    <?= $stock <= 0 ? 'disabled' : '' ?>
+                                                    data-require-login="Bạn chưa đăng nhập nên không thể đặt hàng. Vui lòng đăng nhập bằng tài khoản Thành viên (Khách hàng) để mua sản phẩm."
+                                                    data-login-redirect="<?= e($productUrl) ?>">
                                                 <i class="bi bi-cart-plus me-1" aria-hidden="true"></i>Thêm
                                             </button>
-                                        </form>
+                                        <?php else: ?>
+                                            <a class="btn btn-soft btn-sm" href="<?= e($productUrl) ?>">Chi tiết</a>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </article>

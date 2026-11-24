@@ -3,22 +3,25 @@
 require_once __DIR__ . '/../Models/ProductModel.php';
 require_once __DIR__ . '/../Models/CategoryModel.php';
 require_once __DIR__ . '/../Models/CartModel.php';
+require_once __DIR__ . '/../Models/ReviewModel.php';
 
 /**
- * Trang sản phẩm phía người dùng: danh sách (tìm kiếm/lọc/sắp xếp/phân trang)
- * và trang chi tiết sản phẩm.
+ * Trang sản phẩm phía người dùng: danh sách (tìm kiếm/lọc/sắp xếp/phân trang),
+ * chi tiết sản phẩm và đánh giá/phản hồi sản phẩm.
  */
 class ProductController
 {
     private $productModel;
     private $categoryModel;
     private $cartModel;
+    private $reviewModel;
 
     public function __construct(PDO $db)
     {
         $this->productModel = new ProductModel($db);
         $this->categoryModel = new CategoryModel($db);
         $this->cartModel = new CartModel($this->productModel);
+        $this->reviewModel = new ReviewModel($db);
     }
 
     /** Danh sách sản phẩm: tìm theo từ khoá, lọc danh mục/khoảng giá, sắp xếp, phân trang. */
@@ -83,7 +86,10 @@ class ProductController
 
         $images = $this->productModel->images($product['id']);
         $related = $this->productModel->related($product, 4);
-        $quantityInCart = $this->cartModel->quantityOf($product['id']);
+        $reviews = $this->reviewModel->getByProductId($product['id']);
+        $ratingSummary = $this->reviewModel->productRatingSummary($product['id']);
+        $reviewFlash = flash_get('review');
+        $quantityInCart = Permission::isMember() ? $this->cartModel->quantityOf($product['id']) : 0;
         $stock = (int) $product['stock'];
 
         $pageTitle = $product['name'];
@@ -91,6 +97,50 @@ class ProductController
         $activeNav = 'products';
 
         require __DIR__ . '/../Views/Frontends/products/show.php';
+    }
+
+    /** Thành viên gửi đánh giá / phản hồi về sản phẩm (chỉ role = 1). */
+    public function review()
+    {
+        $productId = (int) ($_POST['product_id'] ?? 0);
+        $redirectTarget = 'index.php?controller=product&action=index';
+        if ($productId > 0) {
+            $targetProduct = $this->productModel->findById($productId);
+            if ($targetProduct && (int) $targetProduct['status'] === 1) {
+                $redirectTarget = 'index.php?controller=product&action=show&slug=' . rawurlencode($targetProduct['slug']);
+            }
+        }
+
+        $user = Permission::requireMember(
+            'Chỉ tài khoản Thành viên (Khách hàng) mới có thể gửi đánh giá sản phẩm.',
+            'Vui lòng đăng nhập bằng tài khoản Thành viên (Khách hàng) để gửi đánh giá và phản hồi sản phẩm.',
+            $redirectTarget
+        );
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_verify()) {
+            flash_set('review', 'Yêu cầu gửi đánh giá không hợp lệ.', 'danger');
+            redirect($redirectTarget);
+        }
+
+        $product = $this->productModel->findById($productId);
+        if (!$product || (int) $product['status'] !== 1) {
+            flash_set('review', 'Không tìm thấy sản phẩm để đánh giá.', 'danger');
+            redirect('index.php?controller=product&action=index');
+        }
+
+        $rating = (int) ($_POST['rating'] ?? 5);
+        $comment = trim((string) ($_POST['comment'] ?? ''));
+
+        if ($rating < 1 || $rating > 5) {
+            flash_set('review', 'Mức đánh giá phải từ 1 đến 5 sao.', 'danger');
+        } elseif (mb_strlen($comment, 'UTF-8') < 5 || mb_strlen($comment, 'UTF-8') > 2000) {
+            flash_set('review', 'Nội dung đánh giá phải có từ 5 đến 2.000 ký tự.', 'danger');
+        } else {
+            $this->reviewModel->create((int) $user['id'], $productId, $rating, $comment, ReviewModel::STATUS_APPROVED);
+            flash_set('review', 'Cảm ơn bạn đã gửi đánh giá! Nhân viên CSKH sẽ sớm phản hồi nếu bạn có câu hỏi.', 'success');
+        }
+
+        redirect('index.php?controller=product&action=show&slug=' . rawurlencode($product['slug']) . '#reviews');
     }
 
     /** Đọc một tham số số (giá); trả về null nếu không hợp lệ. */

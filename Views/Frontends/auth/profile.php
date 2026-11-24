@@ -54,6 +54,14 @@ require __DIR__ . '/../../Layouts/Frontend/header.php';
                         <div class="col-12">
                             <label class="form-label" for="avatar">Ảnh đại diện (JPG, PNG, WebP; tối đa 2 MB)</label>
                             <input class="form-control" id="avatar" type="file" name="avatar" accept="image/jpeg,image/png,image/webp">
+                            <?php if ($avatarUrl !== null): ?>
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" id="remove_avatar" name="remove_avatar" value="1">
+                                    <label class="form-check-label small text-danger" for="remove_avatar">
+                                        Gỡ ảnh đại diện hiện tại (về ảnh mặc định)
+                                    </label>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <hr class="my-4">

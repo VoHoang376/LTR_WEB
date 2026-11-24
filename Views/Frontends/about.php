@@ -19,7 +19,7 @@ require __DIR__ . '/../Layouts/Frontend/header.php';
                         <div class="col-lg-5">
                             <img
                                 class="about-section-image"
-                                src="<?= $escape('Public/uploads/' . rawurlencode(basename($section['image_url']))) ?>"
+                                src="<?= $escape(upload_url($section['image_url'], 'about')) ?>"
                                 alt="<?= $escape($section['section_title']) ?>"
                                 loading="lazy">
                         </div>

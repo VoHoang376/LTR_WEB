@@ -12,6 +12,7 @@ class AuthController
 
     public function register()
     {
+        $this->rememberRedirectFromQuery();
         $error = null;
         $old = [
             'email' => '',
@@ -47,7 +48,10 @@ class AuthController
 
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = (int) $userId;
-                header('Location: index.php?controller=auth&action=profile');
+                $_SESSION['role'] = 1;
+                $_SESSION['fullname'] = $old['fullname'];
+                $redirectTo = $this->takeRedirectTarget();
+                header('Location: ' . ($redirectTo !== null ? $redirectTo : 'index.php?controller=auth&action=profile'));
                 exit;
             }
         }
@@ -58,6 +62,7 @@ class AuthController
 
     public function login()
     {
+        $this->rememberRedirectFromQuery();
         $error = null;
         $email = '';
 
@@ -80,14 +85,20 @@ class AuthController
                     $_SESSION['role'] = (int) $user['role'];
                     $_SESSION['fullname'] = $user['fullname'];
 
-                    // Quay lại trang người dùng định vào trước khi bị yêu cầu đăng nhập
-                    // (ví dụ trang thanh toán). Chỉ chấp nhận URL nội bộ để tránh open redirect.
+                    // Xoá giỏ hàng tạm nếu người đăng nhập là Quản trị viên hoặc Nhân viên CSKH.
+                    if ((int) $user['role'] !== Permission::ROLE_MEMBER) {
+                        unset($_SESSION['cart']);
+                    }
+
+                    // Quay lại trang người dùng định vào trước khi bị yêu cầu đăng nhập.
                     $redirectTo = $this->takeRedirectTarget();
 
-                    if ($redirectTo !== null) {
-                        header('Location: ' . $redirectTo);
-                    } elseif ((int) $user['role'] === 0) {
+                    if ((int) $user['role'] === Permission::ROLE_ADMIN) {
                         header('Location: index.php?controller=admin&action=dashboard');
+                    } elseif ((int) $user['role'] === Permission::ROLE_STAFF) {
+                        header('Location: index.php?controller=staff&action=dashboard');
+                    } elseif ($redirectTo !== null) {
+                        header('Location: ' . $redirectTo);
                     } else {
                         header('Location: index.php');
                     }
@@ -169,8 +180,17 @@ class AuthController
                         }
                     }
 
+                    $removeAvatar = !empty($_POST['remove_avatar']);
+                    $oldAvatar = $user['avatar'] ?: 'default_avatar.png';
+                    $uploadedNewAvatar = false;
+
                     if ($error === null) {
+                        $before = $newAvatar;
                         $error = $this->storeAvatar($_FILES['avatar'] ?? null, $newAvatar);
+                        $uploadedNewAvatar = ($error === null && $newAvatar !== $before);
+                    }
+                    if ($error === null && !$uploadedNewAvatar && $removeAvatar) {
+                        $newAvatar = 'default_avatar.png';
                     }
                     if ($error === null) {
                         $this->userModel->updateProfile(
@@ -180,6 +200,17 @@ class AuthController
                             $address,
                             $newAvatar
                         );
+
+                        // Dọn file avatar cũ trên server nếu người dùng đã gỡ hoặc đổi ảnh mới.
+                        if (($uploadedNewAvatar || $removeAvatar)
+                            && $oldAvatar !== 'default_avatar.png'
+                            && $oldAvatar !== $newAvatar
+                            && basename($oldAvatar) === $oldAvatar) {
+                            $oldPath = __DIR__ . '/../Public/uploads/avatars/' . $oldAvatar;
+                            if (is_file($oldPath)) {
+                                @unlink($oldPath);
+                            }
+                        }
 
                         if ($newPassword !== '') {
                             $this->userModel->updatePassword(
@@ -208,6 +239,21 @@ class AuthController
     }
 
     /**
+     * Lưu đường dẫn nội bộ từ query (?redirect=...) để sau khi đăng nhập/đăng ký
+     * người dùng được đưa về đúng bài viết, sản phẩm hoặc trang Hỏi/Đáp đang xem.
+     */
+    private function rememberRedirectFromQuery()
+    {
+        if (!isset($_GET['redirect']) || !is_string($_GET['redirect'])) {
+            return;
+        }
+        $candidate = trim($_GET['redirect']);
+        if ($this->isSafeInternalTarget($candidate)) {
+            $_SESSION['redirect_after_login'] = $candidate;
+        }
+    }
+
+    /**
      * Lấy URL nội bộ cần quay lại sau khi đăng nhập (do Permission::requireLogin đặt vào session).
      * Chỉ chấp nhận chuỗi bắt đầu bằng "index.php" và không chứa scheme/host.
      */
@@ -216,14 +262,18 @@ class AuthController
         $target = $_SESSION['redirect_after_login'] ?? null;
         unset($_SESSION['redirect_after_login']);
 
-        if (!is_string($target) || $target === '') {
-            return null;
-        }
-        if (preg_match('/^index\.php(\?[A-Za-z0-9_\-\.%&=]*)?$/', $target) !== 1) {
+        if (!is_string($target) || !$this->isSafeInternalTarget($target)) {
             return null;
         }
 
         return $target;
+    }
+
+    private function isSafeInternalTarget($target)
+    {
+        return is_string($target)
+            && $target !== ''
+            && preg_match('/^index\.php(\?[A-Za-z0-9_\-\.%&=]*)?(#[A-Za-z0-9_\-]+)?$/', $target) === 1;
     }
 
     private function requireLogin()

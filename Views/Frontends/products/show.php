@@ -25,6 +25,7 @@ require __DIR__ . '/../partials/header.php';
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="index.php">Trang chủ</a></li>
                 <li class="breadcrumb-item"><a href="index.php?controller=product&amp;action=index">Sản phẩm</a></li>
                 <?php if ($product['category_name'] !== null): ?>
                     <li class="breadcrumb-item">
@@ -88,44 +89,73 @@ require __DIR__ . '/../partials/header.php';
                     <span><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Đổi trả 7 ngày</span>
                 </div>
 
-                <form id="add-to-cart-form" class="js-cart-form" method="post"
-                      action="index.php?controller=cart&amp;action=add">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                <?php $currentProductUrl = 'index.php?controller=product&action=show&slug=' . rawurlencode($product['slug']); ?>
+                <?php if (Permission::isMember()): ?>
+                    <form id="add-to-cart-form" class="js-cart-form" method="post"
+                          action="index.php?controller=cart&amp;action=add">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
 
-                    <div class="d-flex flex-wrap align-items-end gap-3 mb-3">
-                        <div>
-                            <label class="form-label small fw-bold text-uppercase text-secondary"
-                                   for="quantity">Số lượng</label>
-                            <div class="input-group qty-group" style="max-width: 160px;">
-                                <button class="btn btn-outline-secondary" type="button" data-qty-step="-1"
-                                        aria-label="Giảm số lượng">−</button>
-                                <input type="number" class="form-control text-center" id="quantity" name="quantity"
-                                       value="<?= max(1, $quantityInCart) ?>" min="1"
-                                       max="<?= max(1, min(99, $stock)) ?>" data-max="<?= $stock ?>"
-                                       <?= $stock <= 0 ? 'disabled' : '' ?>>
-                                <button class="btn btn-outline-secondary" type="button" data-qty-step="1"
-                                        aria-label="Tăng số lượng">+</button>
+                        <div class="d-flex flex-wrap align-items-end gap-3 mb-3">
+                            <div>
+                                <label class="form-label small fw-bold text-uppercase text-secondary"
+                                       for="quantity">Số lượng</label>
+                                <div class="input-group qty-group" style="max-width: 160px;">
+                                    <button class="btn btn-outline-secondary" type="button" data-qty-step="-1"
+                                            aria-label="Giảm số lượng">−</button>
+                                    <input type="number" class="form-control text-center" id="quantity" name="quantity"
+                                           value="<?= max(1, $quantityInCart) ?>" min="1"
+                                           max="<?= max(1, min(99, $stock)) ?>" data-max="<?= $stock ?>"
+                                           <?= $stock <= 0 ? 'disabled' : '' ?>>
+                                    <button class="btn btn-outline-secondary" type="button" data-qty-step="1"
+                                            aria-label="Tăng số lượng">+</button>
+                                </div>
                             </div>
+                            <p class="mb-2 small text-secondary">
+                                <?php if ($quantityInCart > 0): ?>
+                                    Bạn đang có <strong><?= (int) $quantityInCart ?></strong> sản phẩm này trong giỏ.
+                                <?php else: ?>
+                                    Chọn số lượng rồi thêm vào giỏ hàng.
+                                <?php endif; ?>
+                            </p>
                         </div>
-                        <p class="mb-2 small text-secondary">
-                            <?php if ($quantityInCart > 0): ?>
-                                Bạn đang có <strong><?= (int) $quantityInCart ?></strong> sản phẩm này trong giỏ.
-                            <?php else: ?>
-                                Chọn số lượng rồi thêm vào giỏ hàng.
-                            <?php endif; ?>
-                        </p>
-                    </div>
 
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-brand btn-lg" <?= $stock <= 0 ? 'disabled' : '' ?>>
+                                <i class="bi bi-cart-plus me-2" aria-hidden="true"></i>Thêm vào giỏ hàng
+                            </button>
+                            <a class="btn btn-soft btn-lg" href="index.php?controller=cart&amp;action=index">
+                                <i class="bi bi-cart3 me-2" aria-hidden="true"></i>Xem giỏ hàng
+                            </a>
+                        </div>
+                    </form>
+                <?php elseif (!Permission::isLoggedIn()): ?>
+                    <div class="alert alert-warning border-warning-subtle small mb-3" role="status">
+                        <i class="bi bi-shield-lock me-1" aria-hidden="true"></i>
+                        <strong>Chưa đăng nhập:</strong> Vui lòng đăng nhập bằng <strong>tài khoản Thành viên</strong> để thêm vào giỏ hàng và đặt mua sản phẩm.
+                    </div>
                     <div class="d-flex flex-wrap gap-2">
-                        <button type="submit" class="btn btn-brand btn-lg" <?= $stock <= 0 ? 'disabled' : '' ?>>
+                        <button type="button" class="btn btn-brand btn-lg" <?= $stock <= 0 ? 'disabled' : '' ?>
+                                data-require-login="Bạn chưa đăng nhập nên không thể đặt hàng. Vui lòng đăng nhập bằng tài khoản Thành viên (Khách hàng) để thêm vào giỏ hàng và đặt mua sản phẩm."
+                                data-login-redirect="<?= e($currentProductUrl) ?>">
                             <i class="bi bi-cart-plus me-2" aria-hidden="true"></i>Thêm vào giỏ hàng
                         </button>
-                        <a class="btn btn-soft btn-lg" href="index.php?controller=cart&amp;action=index">
-                            <i class="bi bi-cart3 me-2" aria-hidden="true"></i>Xem giỏ hàng
+                        <a class="btn btn-soft btn-lg" href="index.php?controller=auth&amp;action=login&amp;redirect=<?= rawurlencode($currentProductUrl) ?>">
+                            <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Đăng nhập để đặt hàng
                         </a>
                     </div>
-                </form>
+                <?php else: ?>
+                    <div class="alert alert-light border small mb-0">
+                        <i class="bi bi-shield-lock me-1 text-primary" aria-hidden="true"></i>
+                        Bạn đang đăng nhập bằng tài khoản <strong><?= e(Permission::roleLabel(Permission::role())) ?></strong>
+                        (chế độ quản lý / hỗ trợ — không thực hiện đặt mua hàng).
+                        <?php if (Permission::isAdmin()): ?>
+                            <a class="ms-1 fw-semibold" href="index.php?controller=admin&amp;action=product-edit&amp;id=<?= (int) $product['id'] ?>">Sửa sản phẩm này &rarr;</a>
+                        <?php elseif (Permission::isStaff()): ?>
+                            <a class="ms-1 fw-semibold text-success" href="index.php?controller=staff&amp;action=reviews">Trả lời phản hồi sản phẩm &rarr;</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
 
                 <ul class="list-unstyled small text-secondary mt-4 mb-0">
                     <li class="mb-1"><i class="bi bi-check2-circle me-2 text-success" aria-hidden="true"></i>Sản phẩm chính hãng, có hoá đơn VAT</li>
@@ -167,6 +197,103 @@ require __DIR__ . '/../partials/header.php';
                     </div>
                 </div>
             <?php endif; ?>
+
+            <!-- Đánh giá & Phản hồi sản phẩm -->
+            <section id="reviews" class="panel mt-4">
+                <div class="panel-header">
+                    <span><i class="bi bi-star-half text-warning me-2" aria-hidden="true"></i>Đánh giá &amp; Phản hồi sản phẩm (<?= (int) ($ratingSummary['total'] ?? 0) ?>)</span>
+                    <?php if (!empty($ratingSummary['total'])): ?>
+                        <span class="badge text-bg-warning"><?= number_format((float) $ratingSummary['avg'], 1) ?> / 5 ★</span>
+                    <?php endif; ?>
+                </div>
+                <div class="panel-body">
+                    <?php if (!empty($reviewFlash)): ?>
+                        <div class="alert alert-<?= e($reviewFlash['type']) ?>" role="status">
+                            <?= e($reviewFlash['message']) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (Permission::isMember()): ?>
+                        <form method="post" action="index.php?controller=product&amp;action=review"
+                              class="js-validate needs-validation border rounded-3 p-3 bg-light-subtle mb-4" novalidate>
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                            <div class="row g-2 align-items-center mb-2">
+                                <div class="col-auto">
+                                    <label class="form-label mb-0 small fw-semibold" for="review-rating">Đánh giá của bạn:</label>
+                                </div>
+                                <div class="col-auto">
+                                    <select id="review-rating" name="rating" class="form-select form-select-sm" required>
+                                        <option value="5" selected>★★★★★ (5 sao – Rất hài lòng)</option>
+                                        <option value="4">★★★★☆ (4 sao – Hài lòng)</option>
+                                        <option value="3">★★★☆☆ (3 sao – Bình thường)</option>
+                                        <option value="2">★★☆☆☆ (2 sao – Chưa tốt)</option>
+                                        <option value="1">★☆☆☆☆ (1 sao – Không hài lòng)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="visually-hidden" for="review-comment">Nội dung phản hồi sản phẩm</label>
+                                <textarea id="review-comment" name="comment" rows="3" class="form-control"
+                                          minlength="5" maxlength="2000" required
+                                          placeholder="Chia sẻ trải nghiệm sử dụng hoặc đặt câu hỏi về sản phẩm này..."></textarea>
+                                <div class="invalid-feedback">Vui lòng nhập nội dung đánh giá (5–2.000 ký tự).</div>
+                            </div>
+                            <button type="submit" class="btn btn-brand btn-sm">
+                                <i class="bi bi-send me-1" aria-hidden="true"></i>Gửi đánh giá / phản hồi
+                            </button>
+                        </form>
+                    <?php elseif (!Permission::isLoggedIn()): ?>
+                        <div class="alert alert-warning border-warning-subtle d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4 small" role="status">
+                            <span>
+                                <i class="bi bi-shield-lock me-1" aria-hidden="true"></i>
+                                <strong>Chưa đăng nhập:</strong> Bạn không thể viết đánh giá hay phản hồi sản phẩm. Vui lòng đăng nhập bằng tài khoản Thành viên.
+                            </span>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                        data-require-login="Bạn chưa đăng nhập nên không thể viết đánh giá sản phẩm. Vui lòng đăng nhập bằng tài khoản Thành viên (Khách hàng)."
+                                        data-login-redirect="<?= e($currentProductUrl . '#reviews') ?>">
+                                    Viết đánh giá
+                                </button>
+                                <a href="index.php?controller=auth&amp;action=login&amp;redirect=<?= rawurlencode($currentProductUrl . '#reviews') ?>"
+                                   class="btn btn-brand btn-sm">Đăng nhập ngay</a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (empty($reviews)): ?>
+                        <p class="text-secondary small mb-0">Chưa có đánh giá nào cho sản phẩm này.</p>
+                    <?php else: ?>
+                        <div class="vstack gap-3">
+                            <?php foreach ($reviews as $review): ?>
+                                <div class="border rounded-3 p-3">
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-1">
+                                        <div>
+                                            <strong class="small"><?= e($review['author_name']) ?></strong>
+                                            <span class="text-warning ms-2 small"><?= str_repeat('★', (int) $review['rating']) . str_repeat('☆', 5 - (int) $review['rating']) ?></span>
+                                        </div>
+                                        <span class="text-secondary small"><?= e(format_datetime($review['created_at'])) ?></span>
+                                    </div>
+                                    <p class="mb-0 small" style="white-space: pre-line;"><?= e($review['comment']) ?></p>
+
+                                    <?php if (!empty($review['staff_reply'])): ?>
+                                        <div class="mt-2 ms-3 p-2.5 rounded-3 border-start border-3 border-success bg-success-subtle small">
+                                            <div class="fw-semibold text-success mb-1">
+                                                <i class="bi bi-headset me-1" aria-hidden="true"></i>
+                                                Phản hồi từ Nhân viên CSKH<?= !empty($review['staff_name']) ? ' (' . e($review['staff_name']) . ')' : '' ?>
+                                                <?php if (!empty($review['replied_at'])): ?>
+                                                    <span class="fw-normal text-secondary ms-1">· <?= e(format_datetime($review['replied_at'])) ?></span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <p class="mb-0 text-dark" style="white-space: pre-line;"><?= e($review['staff_reply']) ?></p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </section>
         </div>
 
         <div class="col-lg-4">
@@ -190,7 +317,7 @@ require __DIR__ . '/../partials/header.php';
             <h2 class="section-title">Sản phẩm cùng danh mục</h2>
             <div class="row g-3">
                 <?php foreach ($related as $item): ?>
-                    <?php $itemUrl = 'index.php?controller=product&amp;action=show&amp;slug=' . rawurlencode($item['slug']); ?>
+                    <?php $itemUrl = 'index.php?controller=product&action=show&slug=' . rawurlencode($item['slug']); ?>
                     <div class="col-6 col-md-3">
                         <article class="product-card">
                             <a class="product-thumb" href="<?= e($itemUrl) ?>">

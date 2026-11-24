@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9a3412"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g4)"/>
+  <circle cx="670" cy="340" r="135" fill="#ffffff" fill-opacity="0.08"/>
+  <path d="M400 105 L505 148 V225 C505 282 458 320 400 342 C342 320 295 282 295 225 V148 Z" fill="#ffffff" fill-opacity="0.93"/>
+  <polyline points="355,222 388,255 452,188" fill="none" stroke="#ea580c" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="400" y="390" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">BẢO TRÌ HỆ THỐNG IT ĐỊNH KỲ</text>
+</svg>

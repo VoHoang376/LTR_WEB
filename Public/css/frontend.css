@@ -115,10 +115,15 @@ a {
     color: #fff;
     font-size: 0.72rem;
     font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* ===== General ===== */
 body {
     min-height: 100vh;
-    background-color: #f8f9fa;
+    background-color: var(--surface);
 }
 
 .navbar-brand {
@@ -873,6 +878,9 @@ body {
 
     .stock-badge {
         font-size: 0.68rem;
+    }
+}
+
 .feature-icon i {
     font-size: 1.75rem;
     color: #1d4ed8;

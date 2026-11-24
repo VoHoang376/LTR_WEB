@@ -62,36 +62,49 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-4">
                         <h2 class="h5 fw-semibold mb-4">Gửi Lời Nhắn</h2>
-                        <form id="contactForm" method="post" action="index.php?controller=contact" novalidate>
-                            <input type="hidden" name="csrf_token" value="<?= $escape($csrfToken) ?>">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label" for="fullname">Họ và tên <span class="text-danger">*</span></label>
-                                    <input class="form-control" id="fullname" type="text" name="fullname" value="<?= $escape($old['fullname']) ?>" maxlength="100" autocomplete="name" required>
-                                    <div class="invalid-feedback">Vui lòng nhập họ và tên (2–100 ký tự).</div>
+                        <?php if (Permission::canShop()): ?>
+                            <form id="contactForm" method="post" action="index.php?controller=contact" novalidate>
+                                <input type="hidden" name="csrf_token" value="<?= $escape($csrfToken) ?>">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="fullname">Họ và tên <span class="text-danger">*</span></label>
+                                        <input class="form-control" id="fullname" type="text" name="fullname" value="<?= $escape($old['fullname']) ?>" maxlength="100" autocomplete="name" required>
+                                        <div class="invalid-feedback">Vui lòng nhập họ và tên (2–100 ký tự).</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
+                                        <input class="form-control" id="email" type="email" name="email" value="<?= $escape($old['email']) ?>" maxlength="100" autocomplete="email" required>
+                                        <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ.</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" for="phone">Số điện thoại</label>
+                                        <input class="form-control" id="phone" type="tel" name="phone" value="<?= $escape($old['phone']) ?>" maxlength="20" autocomplete="tel">
+                                        <div class="invalid-feedback">Số điện thoại không hợp lệ.</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" for="message">Lời nhắn <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="message" name="message" rows="5" maxlength="5000" required><?= $escape($old['message']) ?></textarea>
+                                        <div class="invalid-feedback">Vui lòng nhập nội dung lời nhắn (ít nhất 10 ký tự).</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="bi bi-send me-1"></i> Gửi lời nhắn
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
-                                    <input class="form-control" id="email" type="email" name="email" value="<?= $escape($old['email']) ?>" maxlength="100" autocomplete="email" required>
-                                    <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ.</div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label" for="phone">Số điện thoại</label>
-                                    <input class="form-control" id="phone" type="tel" name="phone" value="<?= $escape($old['phone']) ?>" maxlength="20" autocomplete="tel">
-                                    <div class="invalid-feedback">Số điện thoại không hợp lệ.</div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label" for="message">Lời nhắn <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" id="message" name="message" rows="5" maxlength="5000" required><?= $escape($old['message']) ?></textarea>
-                                    <div class="invalid-feedback">Vui lòng nhập nội dung lời nhắn (ít nhất 10 ký tự).</div>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="bi bi-send me-1"></i> Gửi lời nhắn
-                                    </button>
-                                </div>
+                            </form>
+                        <?php elseif (Permission::isStaff()): ?>
+                            <div class="alert alert-success small mb-0">
+                                <p class="mb-2">Bạn đang đăng nhập bằng tài khoản <strong>Nhân viên CSKH</strong>.</p>
+                                <a class="btn btn-success btn-sm" href="index.php?controller=staff&amp;action=contacts">
+                                    Vào mục Giải quyết liên hệ khách hàng &rarr;
+                                </a>
                             </div>
-                        </form>
+                        <?php else: ?>
+                            <div class="alert alert-light border small mb-0">
+                                Tài khoản <strong>Quản trị viên</strong> không gửi yêu cầu liên hệ khách hàng. Việc tiếp nhận và trả lời liên hệ thuộc về <strong>Nhân viên CSKH</strong>.
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

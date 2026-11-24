@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#065f46"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g2)"/>
+  <circle cx="660" cy="100" r="130" fill="#ffffff" fill-opacity="0.08"/>
+  <path d="M275 210 C340 140, 460 140, 525 210" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round" opacity="0.45"/>
+  <path d="M315 245 C360 198, 440 198, 485 245" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round" opacity="0.72"/>
+  <path d="M355 280 C380 254, 420 254, 445 280" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="400" cy="306" r="14" fill="#ffffff"/>
+  <text x="400" y="375" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">HẠ TẦNG WI-FI 6 DOANH NGHIỆP</text>
+</svg>

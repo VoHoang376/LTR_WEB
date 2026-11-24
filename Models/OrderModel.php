@@ -108,14 +108,15 @@ class OrderModel
             $total = round($total, 2);
 
             $insertOrder = $this->db->prepare(
-                'INSERT INTO orders (user_id, receiver_name, receiver_phone, shipping_address,
+                'INSERT INTO orders (user_id, receiver_name, receiver_email, receiver_phone, shipping_address,
                                      payment_method, note, total_amount, status)
-                 VALUES (:user_id, :receiver_name, :receiver_phone, :shipping_address,
+                 VALUES (:user_id, :receiver_name, :receiver_email, :receiver_phone, :shipping_address,
                          :payment_method, :note, :total_amount, :status)'
             );
             $insertOrder->execute([
-                'user_id' => (int) $userId,
+                'user_id' => $userId !== null ? (int) $userId : null,
                 'receiver_name' => $receiver['receiver_name'],
+                'receiver_email' => !empty($receiver['receiver_email']) ? $receiver['receiver_email'] : null,
                 'receiver_phone' => $receiver['receiver_phone'],
                 'shipping_address' => $receiver['shipping_address'],
                 'payment_method' => (int) $receiver['payment_method'],
@@ -206,9 +207,11 @@ class OrderModel
     public function findById($orderId)
     {
         $statement = $this->db->prepare(
-            'SELECT o.*, u.fullname AS user_name, u.email AS user_email
+            'SELECT o.*,
+                    COALESCE(u.fullname, CONCAT(o.receiver_name, " (Khách vãng lai)")) AS user_name,
+                    COALESCE(u.email, o.receiver_email, "Khách chưa đăng nhập") AS user_email
              FROM orders o
-             JOIN users u ON u.id = o.user_id
+             LEFT JOIN users u ON u.id = o.user_id
              WHERE o.id = :id LIMIT 1'
         );
         $statement->execute(['id' => (int) $orderId]);
@@ -278,7 +281,7 @@ class OrderModel
         $whereSql = $where === [] ? '' : ' WHERE ' . implode(' AND ', $where);
 
         $countStatement = $this->db->prepare(
-            'SELECT COUNT(*) FROM orders o JOIN users u ON u.id = o.user_id' . $whereSql
+            'SELECT COUNT(*) FROM orders o LEFT JOIN users u ON u.id = o.user_id' . $whereSql
         );
         $countStatement->execute($params);
         $info = paginate(
@@ -288,12 +291,13 @@ class OrderModel
         );
 
         $statement = $this->db->prepare(
-            'SELECT o.id, o.user_id, o.receiver_name, o.receiver_phone, o.shipping_address,
+            'SELECT o.id, o.user_id, o.receiver_name, o.receiver_email, o.receiver_phone, o.shipping_address,
                     o.total_amount, o.status, o.payment_method, o.created_at,
-                    u.fullname AS user_name, u.email AS user_email,
+                    COALESCE(u.fullname, "Khách vãng lai") AS user_name,
+                    COALESCE(u.email, o.receiver_email, "") AS user_email,
                     (SELECT COALESCE(SUM(od.quantity), 0) FROM order_details od WHERE od.order_id = o.id) AS total_quantity
              FROM orders o
-             JOIN users u ON u.id = o.user_id'
+             LEFT JOIN users u ON u.id = o.user_id'
             . $whereSql
             . ' ORDER BY o.created_at DESC, o.id DESC LIMIT :limit OFFSET :offset'
         );
