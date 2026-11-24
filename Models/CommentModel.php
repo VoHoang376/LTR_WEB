@@ -23,10 +23,10 @@ class CommentModel
         $stmt = $this->db->prepare(
             'SELECT c.id, c.post_id, c.user_id, c.content, c.status, c.created_at,
                     u.fullname AS author_name, u.avatar AS author_avatar
-             FROM comments c
-             JOIN users u ON u.id = c.user_id
-             WHERE c.post_id = :post_id AND c.status = 1
-             ORDER BY c.created_at DESC, c.id DESC'
+            FROM comments c
+            JOIN users u ON u.id = c.user_id
+            WHERE c.post_id = :post_id AND c.status = 1
+            ORDER BY c.created_at DESC, c.id DESC'
         );
         $stmt->execute(['post_id' => (int) $postId]);
 
@@ -37,7 +37,7 @@ class CommentModel
     {
         $stmt = $this->db->prepare(
             'INSERT INTO comments (post_id, user_id, content, status)
-             VALUES (:post_id, :user_id, :content, :status)'
+            VALUES (:post_id, :user_id, :content, :status)'
         );
         $stmt->execute([
             'post_id' => (int) $postId,
@@ -53,7 +53,7 @@ class CommentModel
     public function getAllComments($limit = 15, $offset = 0, $statusFilter = null)
     {
         $sql = 'SELECT c.*, p.title AS post_title, p.slug AS post_slug,
-                       u.fullname AS author_name, u.email AS author_email
+                        u.fullname AS author_name, u.email AS author_email
                 FROM comments c
                 JOIN posts p ON p.id = c.post_id
                 JOIN users u ON u.id = c.user_id';

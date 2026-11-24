@@ -16,19 +16,19 @@ require __DIR__ . '/../Layouts/Backend/header.php';
     <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="flex flex-wrap items-center gap-2">
             <a href="index.php?controller=admin&amp;action=comments"
-               class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $statusFilter === null ? 'bg-brand-500 text-white' : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50' ?>">
+                class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $statusFilter === null ? 'bg-brand-500 text-white' : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50' ?>">
                 Tất cả (<?= (int) $allCount ?>)
             </a>
             <a href="index.php?controller=admin&amp;action=comments&amp;status=0"
-               class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $statusFilter === 0 ? 'bg-amber-500 text-white' : 'border border-amber-200 bg-white text-amber-700 hover:bg-amber-50' ?>">
+                class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $statusFilter === 0 ? 'bg-amber-500 text-white' : 'border border-amber-200 bg-white text-amber-700 hover:bg-amber-50' ?>">
                 Chờ duyệt (<?= (int) $pendingCount ?>)
             </a>
             <a href="index.php?controller=admin&amp;action=comments&amp;status=1"
-               class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $statusFilter === 1 ? 'bg-emerald-600 text-white' : 'border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50' ?>">
+                class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $statusFilter === 1 ? 'bg-emerald-600 text-white' : 'border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50' ?>">
                 Đã duyệt
             </a>
             <a href="index.php?controller=admin&amp;action=comments&amp;status=2"
-               class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $statusFilter === 2 ? 'bg-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50' ?>">
+                class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $statusFilter === 2 ? 'bg-gray-600 text-white' : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50' ?>">
                 Đã ẩn
             </a>
         </div>
@@ -66,8 +66,8 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                                 </td>
                                 <td class="px-4 py-3.5 max-w-xs">
                                     <a href="index.php?controller=post&amp;action=show&amp;slug=<?= rawurlencode($comment['post_slug']) ?>#comments"
-                                       target="_blank" rel="noopener"
-                                       class="text-xs font-medium text-brand-500 hover:underline">
+                                        target="_blank" rel="noopener"
+                                        class="text-xs font-medium text-brand-500 hover:underline">
                                         <?= $escape($comment['post_title']) ?>
                                     </a>
                                     <div class="text-[11px] text-gray-400"><?= $escape(format_datetime($comment['created_at'])) ?></div>
@@ -107,7 +107,7 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                                         <?php endif; ?>
 
                                         <form method="post" action="index.php?controller=admin&amp;action=comment-delete" class="inline"
-                                              data-confirm="Bạn có chắc muốn xóa bình luận này?">
+                                                data-confirm="Bạn có chắc muốn xóa bình luận này?">
                                             <?= csrf_field() ?>
                                             <input type="hidden" name="id" value="<?= (int) $comment['id'] ?>">
                                             <button type="submit" class="rounded border border-red-200 px-2 py-1 text-xs text-red-600 hover:bg-red-50">
@@ -129,7 +129,7 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                 <div class="flex items-center gap-1">
                     <?php for ($i = 1; $i <= $pagination['totalPages']; $i++): ?>
                         <a href="<?= $escape(query_url(['page' => $i])) ?>"
-                           class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $i === $pagination['page'] ? 'bg-brand-500 text-white' : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-100' ?>">
+                            class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $i === $pagination['page'] ? 'bg-brand-500 text-white' : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-100' ?>">
                             <?= $i ?>
                         </a>
                     <?php endfor; ?>

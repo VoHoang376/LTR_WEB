@@ -33,7 +33,7 @@ class PostModel
 
         $whereSql = $where === [] ? '' : ' WHERE ' . implode(' AND ', $where);
         $sql = 'SELECT p.*, u.fullname AS author_name,
-                       (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id AND c.status = 1) AS comment_count
+                        (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id AND c.status = 1) AS comment_count
                 FROM posts p
                 LEFT JOIN users u ON u.id = p.user_id'
             . $whereSql
@@ -134,7 +134,7 @@ class PostModel
     {
         $stmt = $this->db->prepare(
             'INSERT INTO posts (user_id, title, slug, summary, content, thumbnail, meta_keywords, meta_description, status)
-             VALUES (:user_id, :title, :slug, :summary, :content, :thumbnail, :meta_keywords, :meta_description, :status)'
+            VALUES (:user_id, :title, :slug, :summary, :content, :thumbnail, :meta_keywords, :meta_description, :status)'
         );
         $stmt->execute([
             'user_id' => $userId !== null ? (int) $userId : null,

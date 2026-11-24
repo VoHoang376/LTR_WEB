@@ -22,8 +22,8 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                     Tiêu đề bài viết <span class="text-red-500">*</span>
                 </label>
                 <input type="text" id="post-title" name="title" value="<?= $escape($post['title']) ?>"
-                       minlength="3" maxlength="255" required
-                       class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none">
+                        minlength="3" maxlength="255" required
+                        class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none">
             </div>
 
             <div class="grid gap-4 md:grid-cols-2">
@@ -32,8 +32,8 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                         Đường dẫn (Slug – bỏ trống để tự sinh)
                     </label>
                     <input type="text" id="post-slug" name="slug" value="<?= $escape($post['slug']) ?>"
-                           maxlength="255" placeholder="vi-du-bai-viet-moi"
-                           class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none">
+                            maxlength="255" placeholder="vi-du-bai-viet-moi"
+                            class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none">
                 </div>
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300" for="post-status">
@@ -52,7 +52,7 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                     Tóm tắt ngắn
                 </label>
                 <textarea id="post-summary" name="summary" rows="2"
-                          class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none"><?= $escape($post['summary']) ?></textarea>
+                            class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none"><?= $escape($post['summary']) ?></textarea>
             </div>
 
             <div>
@@ -60,7 +60,7 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                     Nội dung chi tiết <span class="text-red-500">*</span>
                 </label>
                 <textarea id="post-content" name="content" rows="8" minlength="10" required
-                          class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none"><?= $escape($post['content']) ?></textarea>
+                            class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none"><?= $escape($post['content']) ?></textarea>
             </div>
 
             <div>
@@ -68,7 +68,7 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                     Ảnh đại diện (JPG, PNG, WebP – tối đa 2 MB)
                 </label>
                 <input type="file" id="post-thumbnail" name="thumbnail" accept="image/jpeg,image/png,image/webp"
-                       class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
+                        class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
             </div>
 
             <div class="grid gap-4 md:grid-cols-2">
@@ -77,16 +77,16 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                         Từ khóa SEO (Meta Keywords)
                     </label>
                     <input type="text" id="post-keywords" name="meta_keywords" value="<?= $escape($post['meta_keywords']) ?>"
-                           maxlength="255" placeholder="máy in, giải pháp văn phòng..."
-                           class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none">
+                            maxlength="255" placeholder="máy in, giải pháp văn phòng..."
+                            class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none">
                 </div>
                 <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300" for="post-meta-desc">
                         Mô tả SEO (Meta Description)
                     </label>
                     <input type="text" id="post-meta-desc" name="meta_description" value="<?= $escape($post['meta_description']) ?>"
-                           maxlength="320" placeholder="Tối đa 160–320 ký tự cho công cụ tìm kiếm"
-                           class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none">
+                            maxlength="320" placeholder="Tối đa 160–320 ký tự cho công cụ tìm kiếm"
+                            class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none">
                 </div>
             </div>
 
@@ -95,7 +95,7 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                     Lưu bài viết
                 </button>
                 <a href="index.php?controller=admin&amp;action=posts"
-                   class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
                     Hủy
                 </a>
             </div>

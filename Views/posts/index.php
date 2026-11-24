@@ -18,8 +18,8 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                 <input type="hidden" name="controller" value="admin">
                 <input type="hidden" name="action" value="posts">
                 <input type="search" name="q" value="<?= $escape($keyword ?? '') ?>"
-                       placeholder="Tìm tiêu đề, từ khóa SEO..."
-                       class="rounded-lg border border-gray-300 px-3.5 py-2 text-sm focus:border-brand-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                        placeholder="Tìm tiêu đề, từ khóa SEO..."
+                        class="rounded-lg border border-gray-300 px-3.5 py-2 text-sm focus:border-brand-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white">
                 <button type="submit" class="rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
                     Tìm kiếm
                 </button>
@@ -29,7 +29,7 @@ require __DIR__ . '/../Layouts/Backend/header.php';
             </form>
 
             <a href="index.php?controller=admin&amp;action=post-create"
-               class="inline-flex items-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600">
+                class="inline-flex items-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600">
                 + Thêm bài viết
             </a>
         </div>
@@ -56,12 +56,12 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                             <tr>
                                 <td class="px-4 py-3">
                                     <img src="<?= $escape(upload_url($post['thumbnail'], 'posts')) ?>"
-                                         alt="" class="h-12 w-16 rounded-lg object-cover border border-gray-200">
+                                        alt="" class="h-12 w-16 rounded-lg object-cover border border-gray-200">
                                 </td>
                                 <td class="px-4 py-3">
                                     <a href="index.php?controller=post&amp;action=show&amp;slug=<?= rawurlencode($post['slug']) ?>"
-                                       target="_blank" rel="noopener"
-                                       class="font-medium text-gray-800 hover:text-brand-500 dark:text-white">
+                                        target="_blank" rel="noopener"
+                                        class="font-medium text-gray-800 hover:text-brand-500 dark:text-white">
                                         <?= $escape($post['title']) ?>
                                     </a>
                                     <div class="mt-0.5 text-xs text-gray-400">/<?= $escape($post['slug']) ?></div>
@@ -82,9 +82,9 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                                 <td class="px-4 py-3 text-right whitespace-nowrap">
                                     <div class="flex items-center justify-end gap-3">
                                         <a href="index.php?controller=admin&amp;action=post-edit&amp;id=<?= (int) $post['id'] ?>"
-                                           class="font-medium text-brand-500 hover:underline">Sửa</a>
+                                            class="font-medium text-brand-500 hover:underline">Sửa</a>
                                         <form method="post" action="index.php?controller=admin&amp;action=post-delete"
-                                              data-confirm="Bạn có chắc muốn xóa bài viết này?">
+                                                data-confirm="Bạn có chắc muốn xóa bài viết này?">
                                             <?= csrf_field() ?>
                                             <input type="hidden" name="id" value="<?= (int) $post['id'] ?>">
                                             <button type="submit" class="font-medium text-red-600 hover:underline">Xóa</button>
@@ -107,7 +107,7 @@ require __DIR__ . '/../Layouts/Backend/header.php';
                 <div class="flex items-center gap-1">
                     <?php for ($i = 1; $i <= $pagination['totalPages']; $i++): ?>
                         <a href="<?= $escape(query_url(['page' => $i])) ?>"
-                           class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $i === $pagination['page'] ? 'bg-brand-500 text-white' : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50' ?>">
+                            class="rounded-lg px-3 py-1.5 text-xs font-medium <?= $i === $pagination['page'] ? 'bg-brand-500 text-white' : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50' ?>">
                             <?= $i ?>
                         </a>
                     <?php endfor; ?>
